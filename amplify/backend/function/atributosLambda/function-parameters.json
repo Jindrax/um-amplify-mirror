@@ -1,0 +1,12 @@
+{
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "roachapicockroachConexionPool",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true,
+      "env": "devum"
+    }
+  ],
+  "permissions": {}
+}

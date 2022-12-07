@@ -1,0 +1,58 @@
+{
+  "name": "web-master",
+  "version": "0.1.9",
+  "description": "Web Master para el sistema UM",
+  "productName": "UM Web Master",
+  "author": "Jindrax <jhvangar@gmail.com>",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "quasar dev",
+    "build": "quasar build"
+  },
+  "dependencies": {
+    "@aws-amplify/cli": "^10.0.0",
+    "@aws-amplify/ui-vue": "^2.3.12",
+    "@aws-sdk/client-s3": "^3.130.0",
+    "@quasar/extras": "^1.0.0",
+    "@turf/turf": "^6.5.0",
+    "@types/long": "^4.0.1",
+    "@types/video.js": "^7.3.48",
+    "@videojs/http-streaming": "^2.15.0",
+    "aws-amplify": "^4.3.20",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "hls.js": "^1.1.5",
+    "layer": "file:amplify/backend/function/roachapicockroachConexionPool/lib/nodejs",
+    "moment": "^2.29.3",
+    "nodes2ts": "^2.0.0",
+    "ol": "^7.1.0",
+    "pinia": "^2.0.11",
+    "pinia-plugin-persistedstate": "^1.5.1",
+    "quasar": "^2.6.0",
+    "video.js": "^7.20.3",
+    "vue": "^3.0.0",
+    "vue-accessible-color-picker": "^4.0.4",
+    "vue-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "@quasar/app-webpack": "^3.0.0",
+    "@types/node": "^12.20.21"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "engines": {
+    "node": ">= 12.22.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

@@ -1,0 +1,47 @@
+// app global css in SCSS form
+
+@import "../../node_modules/ol/ol.css";
+
+@font-face {
+  font-family: Nunito;
+  src: url("./fonts/nunito.woff");
+}
+
+body {
+  font-family: Nunito, sans-serif;
+}
+
+.advance-btn {
+  background: black;
+  color: white;
+}
+
+.revert-btn {
+  background: red;
+  color: white;
+}
+
+.empresa-texto {
+  color: $logoAzulRey;
+}
+
+.empresa-bg-rey {
+  background: $logoAzulRey;
+}
+
+.empresa-backgroung {
+  background: #00043f;
+  color: white;
+}
+
+.empresa-foreground {
+  background: $logoAzulGris;
+  color: $logoAzulRey;
+}
+
+.empresa-advance-btn {
+  background: #00043f;
+  color: white;
+}
+
+

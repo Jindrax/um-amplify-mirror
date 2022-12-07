@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "paths": {
+    "/agentes": {
+      "name": "/agentes",
+      "lambdaFunction": "agentesLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/ciudades": {
+      "name": "/ciudades",
+      "lambdaFunction": "ciudadesLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/unidadesadmin": {
+      "name": "/unidadesadmin",
+      "lambdaFunction": "unidadesadminLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/atributos": {
+      "name": "/atributos",
+      "lambdaFunction": "atributosLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/categorias": {
+      "name": "/categorias",
+      "lambdaFunction": "categoriasLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/locaciones": {
+      "name": "/locaciones",
+      "lambdaFunction": "locacionesLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/empresas": {
+      "name": "/empresas",
+      "lambdaFunction": "empresasLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/like": {
+      "name": "/like",
+      "lambdaFunction": "umLikeHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/marcado": {
+      "name": "/marcado",
+      "lambdaFunction": "umBookmarkHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-roachapi-dev-221147-authRole",
+      "UnauthRoleArn": "arn:aws:iam::350130906833:role/amplify-roachapi-dev-221147-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::350130906833:role/amplify-roachapi-dev-221147-authRole",
+      "Region": "sa-east-1",
+      "DeploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+      "UnauthRoleName": "amplify-roachapi-dev-221147-unauthRole",
+      "StackName": "amplify-roachapi-dev-221147",
+      "StackId": "arn:aws:cloudformation:sa-east-1:350130906833:stack/amplify-roachapi-dev-221147/39b5eb10-f2a2-11ec-b35d-06d2c9901ab2",
+      "AmplifyAppId": "d1pd56b8lhuv11",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-roachapi-dev-221147-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    },
+    "categories": {
+      "auth": {
+        "roachapi": {},
+        "userPoolGroups": {}
+      },
+      "function": {
+        "locacionesLambda": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/locacionesLambda-662f4176443858433733-build.zip"
+        },
+        "agentesLambda": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/agentesLambda-426e31476b6f674a5270-build.zip"
+        },
+        "AdminQueriese1720730": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/AdminQueriese1720730-6f54364c4d6668685050-build.zip"
+        },
+        "unidadesadminLambda": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/unidadesadminLambda-2f4d6755783039637a4c-build.zip"
+        },
+        "ciudadesLambda": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/ciudadesLambda-636e474a5a496b584f38-build.zip"
+        },
+        "atributosLambda": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/atributosLambda-644d4267564732324c73-build.zip"
+        },
+        "categoriasLambda": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/categoriasLambda-46325142666849652f79-build.zip"
+        },
+        "roachapicockroachConexionPool": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion71216529-build.zip"
+        },
+        "empresasLambda": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/empresasLambda-6133776e79554d474e42-build.zip"
+        },
+        "umLikeHandler": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/umLikeHandler-735530676b3332727343-build.zip"
+        },
+        "umLikeMaterializer": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/umLikeMaterializer-49314b644a6e4d68446c-build.zip"
+        },
+        "umBookmarkHandler": {
+          "deploymentBucketName": "amplify-roachapi-dev-221147-deployment",
+          "s3Key": "amplify-builds/umBookmarkHandler-6b475046346d4779572f-build.zip"
+        }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d1pd56b8lhuv11",
+          "type": "manual"
+        }
+      }
+    }
+  },
+  "devum": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-roachapi-devum-144757-authRole",
+      "UnauthRoleArn": "arn:aws:iam::576723172939:role/amplify-roachapi-devum-144757-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::576723172939:role/amplify-roachapi-devum-144757-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+      "UnauthRoleName": "amplify-roachapi-devum-144757-unauthRole",
+      "StackName": "amplify-roachapi-devum-144757",
+      "StackId": "arn:aws:cloudformation:us-east-1:576723172939:stack/amplify-roachapi-devum-144757/230c2360-3466-11ed-9a51-0ecd571039cf",
+      "AmplifyAppId": "d2ozf2wiq5z7uy"
+    },
+    "categories": {
+      "auth": {
+        "roachapi": {},
+        "userPoolGroups": {}
+      },
+      "function": {
+        "locacionesLambda": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/locacionesLambda-68592f50734d616b3476-build.zip"
+        },
+        "agentesLambda": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/agentesLambda-3547334e624831707534-build.zip"
+        },
+        "AdminQueriese1720730": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/AdminQueriese1720730-6f54364c4d6668685050-build.zip"
+        },
+        "unidadesadminLambda": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/unidadesadminLambda-53736a44397057736459-build.zip"
+        },
+        "ciudadesLambda": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/ciudadesLambda-6c4f496851525a426a2b-build.zip"
+        },
+        "atributosLambda": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/atributosLambda-486b664b446a6d4d7631-build.zip"
+        },
+        "categoriasLambda": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/categoriasLambda-46325142666849652f79-build.zip"
+        },
+        "empresasLambda": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/empresasLambda-4271514867424a567642-build.zip"
+        },
+        "umLikeHandler": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/umLikeHandler-38507836675830334435-build.zip"
+        },
+        "umLikeMaterializer": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/umLikeMaterializer-4142484c524544484f6d-build.zip"
+        },
+        "umBookmarkHandler": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/umBookmarkHandler-31484851796f6d4b4756-build.zip"
+        },
+        "roachapicockroachConexionPool": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion18d0a1ff-build.zip"
+        }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2ozf2wiq5z7uy",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}

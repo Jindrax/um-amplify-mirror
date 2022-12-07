@@ -1,0 +1,14 @@
+{
+  "extends": "@quasar/app-webpack/tsconfig-preset",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "api/*": ["./src/api/*"],
+      "stores/*": ["./src/stores/*"],
+      "components/*": ["./src/components/*"],
+      "pages/*": ["./src/pages/*"],
+      "~assets/*": ["./src/assets"]
+    }
+  },
+  "exclude": ["/dist", ".quasar", "node_modules", "amplify"]
+}

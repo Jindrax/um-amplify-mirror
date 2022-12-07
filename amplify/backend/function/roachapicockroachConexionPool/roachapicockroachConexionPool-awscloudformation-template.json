@@ -1,0 +1,555 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Lambda layer resource stack creation using Amplify CLI",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    },
+    "deploymentBucketName": {
+      "Type": "String"
+    },
+    "s3Key": {
+      "Type": "String"
+    },
+    "description": {
+      "Type": "String",
+      "Default": ""
+    },
+    "runtimes": {
+      "Type": "List<String>"
+    }
+  },
+  "Resources": {
+    "LambdaLayerVersion18d0a1ff": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": {
+          "Ref": "runtimes"
+        },
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
+        },
+        "Description": {
+          "Ref": "description"
+        },
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate18d0a1ff": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": {
+          "Ref": "LambdaLayerVersion18d0a1ff"
+        },
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersiond1263a07": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersiond1263a07-build.zip"
+        },
+        "Description": "Updated layer version 2022-10-05T20:06:33.488Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivated1263a07": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:13",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion2da4619e": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion2da4619e-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-30T02:23:25.557Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate2da4619e": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:12",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion1b9adb91": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion1b9adb91-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-27T04:22:10.004Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate1b9adb91": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:11",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion96b7de8b": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion96b7de8b-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-27T04:04:16.933Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate96b7de8b": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:10",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersiondca127e0": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersiondca127e0-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-27T03:30:26.189Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivatedca127e0": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:9",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersioncc109258": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersioncc109258-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-27T02:57:39.113Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivatecc109258": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:8",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion2abee8c8": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion2abee8c8-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-26T20:33:35.834Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate2abee8c8": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:7",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion82fe70b1": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion82fe70b1-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-21T07:01:41.493Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate82fe70b1": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:6",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion71dcc927": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion71dcc927-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-21T03:30:24.438Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate71dcc927": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:5",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion61f4a748": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion61f4a748-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-18T07:24:34.765Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate61f4a748": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:4",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion6bbc65fd": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion6bbc65fd-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-15T05:41:19.010Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate6bbc65fd": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:3",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion29f50812": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion29f50812-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-15T04:45:04.325Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate29f50812": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:2",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion260d0f97": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion260d0f97-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-15T03:36:07.074Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "roachapicockroachConexionPool-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate260d0f97": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:576723172939:layer:roachapicockroachConexionPool-devum:1",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "Arn": {
+      "Value": {
+        "Ref": "LambdaLayerVersion18d0a1ff"
+      }
+    }
+  }
+}
