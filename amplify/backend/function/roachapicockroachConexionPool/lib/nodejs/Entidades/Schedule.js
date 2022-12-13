@@ -16,15 +16,6 @@ class ScheduleDay {
 }
 exports.ScheduleDay = ScheduleDay;
 class Schedule {
-    constructor({ monday, tuesday, wednesday, thursday, friday, saturday, sunday }) {
-        this.monday = this.resolveDay(monday);
-        this.tuesday = this.resolveDay(tuesday);
-        this.wednesday = this.resolveDay(wednesday);
-        this.thursday = this.resolveDay(thursday);
-        this.friday = this.resolveDay(friday);
-        this.saturday = this.resolveDay(saturday);
-        this.sunday = this.resolveDay(sunday);
-    }
     resolveDay(day) {
         if (day) {
             if (!(day instanceof ScheduleDay) && day.from !== undefined) {
@@ -42,6 +33,15 @@ class Schedule {
         else {
             return new ScheduleDay({});
         }
+    }
+    constructor({ monday, tuesday, wednesday, thursday, friday, saturday, sunday }) {
+        this.monday = this.resolveDay(monday);
+        this.tuesday = this.resolveDay(tuesday);
+        this.wednesday = this.resolveDay(wednesday);
+        this.thursday = this.resolveDay(thursday);
+        this.friday = this.resolveDay(friday);
+        this.saturday = this.resolveDay(saturday);
+        this.sunday = this.resolveDay(sunday);
     }
 }
 exports.Schedule = Schedule;

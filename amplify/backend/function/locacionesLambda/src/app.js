@@ -79,6 +79,10 @@ app.get('/locaciones/query', async function (req, res) {
             results = await req.clienteDB.query("SELECT * FROM locacion l JOIN atributosporlocacion a ON l.id = a.locacionid WHERE a.atributoid = $1 ORDER BY l.likes;", [params.top]);
             console.log(results);
         }
+        if (params.locacionid) {
+            results = await req.clienteDB.query("SELECT * FROM locacion WHERE id = $1", [params.locacionid]);
+            console.log(results);
+        }
     }
     catch (err) {
         console.error("error executing query:", err);
