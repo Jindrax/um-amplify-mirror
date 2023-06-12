@@ -19,7 +19,7 @@ export const useCiudadStore = defineStore('ciudad', {
                         expiration: 0
                     };
                 }
-                if (state.ciudadesPorUnidadAdmin[unidadAdminId].expiration <= Date.now()) {
+                // if (state.ciudadesPorUnidadAdmin[unidadAdminId].expiration <= Date.now()) {
                     API.get("umapi", `/ciudades/unidadadmin/${unidadAdminId}`, {}).then((unidadAdminQuery) => {
                         // console.log(unidadAdminQuery);
                         state.ciudadesPorUnidadAdmin[unidadAdminId].ciudades = unidadAdminQuery.map((ciudad: any) => {
@@ -27,7 +27,7 @@ export const useCiudadStore = defineStore('ciudad', {
                         });
                         state.ciudadesPorUnidadAdmin[unidadAdminId].expiration = Date.now() + 86400000;
                     });
-                }
+                // }
                 return state.ciudadesPorUnidadAdmin[unidadAdminId].ciudades;
             }
         },

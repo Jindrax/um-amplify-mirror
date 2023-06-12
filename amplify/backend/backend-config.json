@@ -1,121 +1,256 @@
 {
-  "function": {
-    "locacionesLambda": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
+  "api": {
+    "AdminQueries": {
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "roachapicockroachConexionPool",
           "attributes": [
-            "Arn"
-          ]
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "roachapi"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "AdminQueriese1720730"
         }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "umapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "agentesLambda"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "ciudadesLambda"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "unidadesadminLambda"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "atributosLambda"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "categoriasLambda"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "locacionesLambda"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "empresasLambda"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "umLikeHandler"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "umBookmarkHandler"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "auth": {
+    "roachapi": {
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "managed"
+    },
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "roachapi"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
+    }
+  },
+  "function": {
+    "AdminQueriese1720730": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "roachapi"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     },
     "agentesLambda": {
       "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "roachapicockroachConexionPool",
           "attributes": [
             "Arn"
-          ]
-        }
-      ]
-    },
-    "AdminQueriese1720730": {
-      "service": "Lambda",
-      "providerPlugin": "awscloudformation",
-      "build": true,
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "roachapi",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ]
-    },
-    "unidadesadminLambda": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
+          ],
           "category": "function",
-          "resourceName": "roachapicockroachConexionPool",
-          "attributes": [
-            "Arn"
-          ]
+          "resourceName": "roachapicockroachConexionPool"
         }
-      ]
-    },
-    "ciudadesLambda": {
-      "build": true,
+      ],
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "roachapicockroachConexionPool",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
+      "service": "Lambda"
     },
     "atributosLambda": {
       "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "roachapicockroachConexionPool",
           "attributes": [
             "Arn"
-          ]
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
         }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     },
     "categoriasLambda": {
       "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "roachapicockroachConexionPool",
           "attributes": [
             "Arn"
-          ]
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
         }
-      ]
-    },
-    "roachapicockroachConexionPool": {
+      ],
       "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
+      "service": "Lambda"
+    },
+    "ciudadesLambda": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     },
     "empresasLambda": {
       "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "roachapicockroachConexionPool",
           "attributes": [
             "Arn"
-          ]
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
         }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "locacionesLambda": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "roachapicockroachConexionPool": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer"
+    },
+    "umBookmarkHandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     },
     "umLikeHandler": {
       "build": true,
@@ -124,180 +259,255 @@
     },
     "umLikeMaterializer": {
       "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "roachapicockroachConexionPool",
           "attributes": [
             "Arn"
-          ]
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
         }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     },
-    "umBookmarkHandler": {
+    "unidadesadminLambda": {
       "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
-  "auth": {
-    "roachapi": {
-      "service": "Cognito",
-      "serviceType": "managed",
+  "hosting": {
+    "amplifyhosting": {
       "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "frontendAuthConfig": {
-        "socialProviders": [],
-        "usernameAttributes": [],
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": []
-        },
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      }
-    },
-    "userPoolGroups": {
-      "service": "Cognito-UserPool-Groups",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "roachapi",
-          "attributes": [
-            "UserPoolId",
-            "AppClientIDWeb",
-            "AppClientID",
-            "IdentityPoolId"
-          ]
-        }
-      ]
+      "service": "amplifyhosting",
+      "type": "manual"
     }
   },
-  "api": {
-    "umapi": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
+  "parameters": {
+    "AMPLIFY_function_AdminQueriese1720730_deploymentBucketName": {
+      "usedBy": [
         {
           "category": "function",
-          "resourceName": "agentesLambda",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "ciudadesLambda",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "unidadesadminLambda",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "atributosLambda",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "categoriasLambda",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "locacionesLambda",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "empresasLambda",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "umLikeHandler",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "umBookmarkHandler",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
+          "resourceName": "AdminQueriese1720730"
         }
       ]
     },
-    "AdminQueries": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "roachapi",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
+    "AMPLIFY_function_AdminQueriese1720730_s3Key": {
+      "usedBy": [
         {
           "category": "function",
-          "resourceName": "AdminQueriese1720730",
-          "attributes": [
-            "Arn",
-            "Name"
-          ]
+          "resourceName": "AdminQueriese1720730"
+        }
+      ]
+    },
+    "AMPLIFY_function_agentesLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "agentesLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_agentesLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "agentesLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_atributosLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "atributosLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_atributosLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "atributosLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_categoriasLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "categoriasLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_categoriasLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "categoriasLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_ciudadesLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "ciudadesLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_ciudadesLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "ciudadesLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_empresasLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "empresasLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_empresasLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "empresasLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_locacionesLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "locacionesLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_locacionesLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "locacionesLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_roachapicockroachConexionPool_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
+        }
+      ]
+    },
+    "AMPLIFY_function_roachapicockroachConexionPool_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
+        }
+      ]
+    },
+    "AMPLIFY_function_umBookmarkHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umBookmarkHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_umBookmarkHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umBookmarkHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_umLikeHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umLikeHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_umLikeHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umLikeHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_umLikeMaterializer_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umLikeMaterializer"
+        }
+      ]
+    },
+    "AMPLIFY_function_umLikeMaterializer_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umLikeMaterializer"
+        }
+      ]
+    },
+    "AMPLIFY_function_unidadesadminLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "unidadesadminLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_unidadesadminLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "unidadesadminLambda"
+        }
+      ]
+    },
+    "AMPLIFY_hosting_amplifyhosting_appId": {
+      "usedBy": [
+        {
+          "category": "hosting",
+          "resourceName": "amplifyhosting"
+        }
+      ]
+    },
+    "AMPLIFY_hosting_amplifyhosting_type": {
+      "usedBy": [
+        {
+          "category": "hosting",
+          "resourceName": "amplifyhosting"
         }
       ]
     }
   },
   "storage": {
     "videoStorage": {
-      "service": "S3",
+      "dependsOn": [],
       "providerPlugin": "awscloudformation",
-      "dependsOn": []
-    }
-  },
-  "hosting": {
-    "amplifyhosting": {
-      "service": "amplifyhosting",
-      "providerPlugin": "awscloudformation",
-      "type": "manual"
+      "service": "S3"
     }
   }
 }

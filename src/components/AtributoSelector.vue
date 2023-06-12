@@ -1,14 +1,15 @@
 <template>
   <div class="column q-gutter-y-sm">
     <div class="col row q-gutter-sm items-center">
-      <q-item-label class="col-3 text-black text-subtitle1">Añadir Categoria</q-item-label>
+      <q-item-label class="col-3 text-black text-subtitle1">Categoria principal</q-item-label>
       <q-select
           filled
-          v-model="atributoSelector"
+          v-model="categoriaMain"
           :options="categorias"
           behavior="dialog"
           class="col"
-          @update:model-value="addAtributo"
+          @update:model-value="setCategoriaMain"
+          map-options
       >
         <template v-slot:option="scope">
           <q-item v-bind="scope['itemProps']">
@@ -26,38 +27,15 @@
       </q-select>
     </div>
     <div class="col row q-gutter-sm items-center">
-      <q-item-label class="col-3 text-black text-subtitle1">Añadir Atributo</q-item-label>
+      <q-item-label class="col-3 text-black text-subtitle1">Categoria secundaria</q-item-label>
       <q-select
           filled
-          v-model="atributoSelector"
-          :options="atributos"
+          v-model="categoriaSub"
+          :options="categorias"
           behavior="dialog"
           class="col"
-          @update:model-value="addAtributo"
-      >
-        <template v-slot:option="scope">
-          <q-item v-bind="scope['itemProps']">
-            <q-item-section avatar>
-              <q-icon :name="`um-${scope.opt.value.icono}`"/>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ scope.opt.label }}</q-item-label>
-              <q-item-label caption>{{ scope.opt.value.description }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
-    </div>
-    <div class="col row q-gutter-sm items-center">
-      <q-item-label class="col-3 text-black text-subtitle1">Categoria Principal</q-item-label>
-      <q-select
-          filled
-          v-model="categoriaPrincipalSeleccion"
-          :options="categoriasDisponiblesOpciones"
-          use-input
-          input-debounce="300"
-          class="col"
-          @update:model-value="principalSelected"
+          @update:model-value="setCategoriaSub"
+          map-options
       >
         <template v-slot:option="scope">
           <q-item v-bind="scope['itemProps']">
@@ -73,39 +51,12 @@
           </q-item>
         </template>
       </q-select>
-    </div>
-    <div class="col row q-gutter-sm items-center">
-      <q-item-label class="col-3 text-black text-subtitle1">Atributos</q-item-label>
-      <div class="col row">
-        <div v-for="(atributo, indice) in atributosHolder" :key="`atributo-${atributo.id}`">
-          <q-chip v-if="Number(atributo.prioridad) === 1" class="col bg-white shadow-4">
-            <template v-slot:default>
-              <q-item>
-                <q-item-section avatar>
-                  <q-avatar>
-                    <img :src="atributo.imagen" alt="Imagen Categoria">
-                  </q-avatar>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>{{ atributo.nombre }}</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-btn icon="cancel" flat padding="none" @click="removeAtributo(indice)"/>
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-chip>
-          <q-chip v-else class="col bg-white" :icon="`um-${atributo.icono}`"
-                  outline removable @remove="removeAtributo(indice)">{{ atributo.nombre }}
-          </q-chip>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {computed, Ref, ref} from "vue";
+import {computed, onMounted, Ref, ref} from "vue";
 import Atributo from "layer/Entidades/Atributo";
 import {useAtributoStore} from "stores/atributo-store";
 import {storeToRefs} from "pinia";
@@ -115,14 +66,18 @@ type QSelectOption = { label: string, value: Atributo };
 const atributosStore = useAtributoStore();
 
 const props = defineProps<{
-  modelValue: Atributo[]
+  modelValue: Atributo[],
+  categoriamain: string,
+  categoriasub: string
 }>();
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', value: any): void
+  (e: 'update:modelValue', value: Atributo[]): void,
+  (e: 'update:categoriamain', value: string): void,
+  (e: 'update:categoriasub', value: string): void
 }>();
 
-const atributosHolder = ref([] as Atributo[]);
+const atributosHolder = ref([{}, {}] as Atributo[]);
 const atributoSelector: Ref<undefined | QSelectOption> = ref();
 const {getAtributosOptions} = storeToRefs(atributosStore);
 const categorias: QSelectOption[] = getAtributosOptions.value.filter((atributo) => atributo.value.prioridad == 1);
@@ -135,6 +90,30 @@ const categoriasDisponiblesOpciones = computed(() => {
   });
 });
 const categoriaPrincipalSeleccion = ref(undefined as unknown as QSelectOption);
+const categoriaMain = ref();
+const categoriaSub = ref();
+
+onMounted(() => {
+  let main = props.categoriamain, sub = props.categoriasub;
+  categorias.forEach((categoria) => {
+    if (main !== "") {
+      if (categoria.value.id === main) {
+        categoriaMain.value = {
+          label: categoria.label,
+          value: categoria.value
+        }
+      }
+    }
+    if (sub !== "") {
+      if (categoria.value.id === sub) {
+        categoriaSub.value = {
+          label: categoria.label,
+          value: categoria.value
+        }
+      }
+    }
+  });
+});
 
 function compareFn(a: Atributo, b: Atributo) {
   if (categoriaPrincipalSeleccion.value && Number(a.prioridad) === 1 && Number(b.prioridad) === 1) {
@@ -155,26 +134,24 @@ function compareFn(a: Atributo, b: Atributo) {
   }
 }
 
-function addAtributo(atributo: QSelectOption) {
-  atributosHolder.value.push(atributo.value);
-  atributoSelector.value = undefined;
-  atributosHolder.value.sort(compareFn);
+function setCategoriaMain(atributo: QSelectOption) {
+  categoriaMain.value = atributo.value;
+  atributosHolder.value[0] = atributo.value;
   emits("update:modelValue", atributosHolder.value);
+  emits("update:categoriamain", categoriaMain.value.id);
 }
 
-function removeAtributo(indice: number) {
-  atributosHolder.value.splice(indice, 1);
-  atributosHolder.value.sort(compareFn);
+function setCategoriaSub(atributo: QSelectOption) {
+  categoriaSub.value = atributo.value;
+  atributosHolder.value[1] = atributo.value;
   emits("update:modelValue", atributosHolder.value);
+  emits("update:categoriasub", categoriaSub.value.id);
 }
 
 function resetComponent() {
   atributosHolder.value = [];
-  atributoSelector.value = undefined;
-}
-
-function principalSelected() {
-  atributosHolder.value.sort(compareFn);
+  categoriaMain.value = undefined;
+  categoriaSub.value = undefined;
 }
 
 defineExpose({

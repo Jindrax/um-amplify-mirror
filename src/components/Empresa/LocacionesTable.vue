@@ -8,14 +8,16 @@
 <script lang="ts" setup>
 import EmpresaView from "./LocacionView.vue";
 import {onMounted, ref} from "vue";
-import Locacion from "layer/Entidades/Locacion";
-import {API} from "aws-amplify";
+import {API, Auth} from "aws-amplify";
 
 const locaciones = ref();
+const nit = ref();
 
 onMounted(async () => {
-  locaciones.value = await API.get("umapi", `/locaciones/admin`, {});
-})
+  const user = await Auth.currentAuthenticatedUser();
+  nit.value = user.attributes["custom:nit"];
+  locaciones.value = await API.get("umapi", `/locaciones/empresa/${nit.value}`, {});
+});
 
 const allocableWidth = ref(100);
 

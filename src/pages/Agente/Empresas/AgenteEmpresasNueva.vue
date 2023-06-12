@@ -26,11 +26,7 @@
             <div v-if="nuevaEmpresaFlag" class="col-auto row full-width">
               <div class="col q-pa-sm">
                 <span>Email</span>
-                <q-input v-model="nuevaEmpresa.email" class="bg-white">
-                  <q-inner-loading :showing="loadState">
-                    <q-spinner-facebook size="100px" color="primary"/>
-                  </q-inner-loading>
-                </q-input>
+                <q-input v-model="nuevaEmpresa.email" class="bg-white" ref="empresaCorreo" :rules="[validarCorreo]"/>
               </div>
             </div>
           </div>
@@ -48,8 +44,11 @@
             <div class="col-6 container">
               <q-resize-observer @resize="resizeEvent"/>
               <div class="full-height column items-start justify-end">
-                <div class="col-auto pre-title" :style="{'font-size': `${preTituloFont}px`, 'margin-bottom': `${preTituloMarginBottom}dp`, 'margin-left': `${preTituloMarginLeft}dp`}">{{nuevaLocacion.subtitulosuperior}}</div>
-                <div class="col-auto title" :style="{'font-size': `${tituloFont}px`}">{{nuevaLocacion.titulo}}</div>
+                <div class="col-auto pre-title"
+                     :style="{'font-size': `${preTituloFont}px`, 'margin-bottom': `${preTituloMarginBottom}dp`, 'margin-left': `${preTituloMarginLeft}dp`}">
+                  {{ nuevaLocacion.subtitulosuperior }}
+                </div>
+                <div class="col-auto title" :style="{'font-size': `${tituloFont}px`}">{{ nuevaLocacion.titulo }}</div>
               </div>
             </div>
             <div class="col-6 column">
@@ -90,7 +89,8 @@
             </div>
           </div>
           <div class="col q-pa-sm full-width">
-            <atributo-selector v-model="nuevaLocacion.atributos" />
+            <atributo-selector v-model="nuevaLocacion.atributos" v-model:categoriamain="nuevaLocacion.categoriamain"
+                               v-model:categoriasub="nuevaLocacion.categoriasub" ref="atributoSelector"/>
           </div>
           <div class="row full-width">
             <div class="col q-pa-sm">
@@ -117,8 +117,10 @@
             </div>
             <div class="col-6 q-pa-sm">
               <span>Localización</span>
-              <q-input v-model.number="nuevaLocacion.latitud" type="number" class="bg-white" label="Latitud"/>
-              <q-input v-model.number="nuevaLocacion.longitud" type="number" class="bg-white" label="Longitud"/>
+              <q-input v-model.number="nuevaLocacion.latitud" type="number" class="bg-white" label="Latitud"
+                       ref="latitudInput" :rules="[validarCoordenada]"/>
+              <q-input v-model.number="nuevaLocacion.longitud" type="number" class="bg-white" label="Longitud"
+                       ref="longitudInput" :rules="[validarCoordenada]"/>
             </div>
           </div>
         </div>
@@ -166,6 +168,10 @@ const whatsappInput = ref();
 const whatsappRegEx = /\+57\d{10}$/;
 const facebookRegEx = /https:\/\/ww?e?w?b?\.facebook\.com\/([^\/]+)\/?$/;
 const instagramRegEx = /https:\/\/www\.instagram\.com\/([^\/]+)\/?$/;
+
+const latitudInput = ref();
+const longitudInput = ref();
+const empresaCorreo = ref();
 
 
 const sizeRef = ref({
@@ -222,8 +228,28 @@ function resetComponent() {
   creationState.value = false;
 }
 
+const validarCoordenada = (coordenada: number | string) => {
+  if (coordenada === "") {
+    return "Debe ingresar una coordenada en este campo";
+  }
+  if (coordenada === 0) {
+    return "For favor ingrese una coordenada valida para la locación actual";
+  }
+  return true;
+}
+
+const validarCorreo = (correo: string) => {
+  const regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+  if (correo.match(regex)) {
+    return true;
+  }
+  return "Por favor introduzca un correo valido."
+}
+
 const insertLocacion = async () => {
   let error = false;
+  error = latitudInput.value.validate() === false;
+  error = longitudInput.value.validate() === false;
   const locacion = nuevaLocacion.value;
   const fecha = moment().toISOString();
   locacion.geom = "";
@@ -249,14 +275,22 @@ const insertLocacion = async () => {
       error = true;
     }
   }
+  if (locacion.categoriamain === '') {
+    notify("Se necesita al menos una categoria principal");
+    error = true;
+  }
   if (error) {
+    notify("Uno o mas campos se encuentran en un estado invalido, por favor revise la información.");
     return;
   }
   creationState.value = true;
+  console.log(locacion);
   if (nuevaEmpresaFlag.value) {
     const empresaResponse = await empresaStore.addEmpresa(nuevaEmpresa.value);
+    // const empresaResponse = "OK";
     if (empresaResponse == "OK") {
       const response = await locacionStore.addLocacion(nuevaLocacion.value);
+      // const response = "OK";
       if (response == "OK") {
         notify("Empresa creada correctamente");
         resetComponent();
@@ -270,6 +304,7 @@ const insertLocacion = async () => {
     }
   } else {
     const response = await locacionStore.addLocacion(nuevaLocacion.value);
+    // const response = "OK";
     if (response == "OK") {
       notify("Empresa creada correctamente");
       resetComponent();
@@ -327,7 +362,7 @@ span {
   color: white;
 }
 
-.title{
+.title {
   font-weight: 600;
   text-shadow: 0 2px 2.62px rgba(51, 51, 51, 0.6);
   elevation: 4deg;

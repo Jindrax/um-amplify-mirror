@@ -1,6 +1,7 @@
 import {RouteRecordRaw} from 'vue-router';
 import {Auth} from 'aws-amplify';
 import {
+    adminDashboardDynamicRoute,
     agenteDashboardDynamicRoute,
     dashboardRedirectionDynamicRoute,
     empresaDashboardDynamicRoute,
@@ -38,8 +39,11 @@ const routes: () => Promise<RouteRecordRaw[]> = async () => {
         const userData = await Auth.currentAuthenticatedUser();
         const groups = userData.signInUserSession.accessToken.payload["cognito:groups"];
         const permissionLevel = getPermissionLevel(groups);
+        console.log("Permision level", permissionLevel);
         switch (permissionLevel) {
             case "admins":
+                routesArray.push(adminDashboardDynamicRoute);
+                break;
             case "agentes":
                 routesArray.push(agenteDashboardDynamicRoute);
                 break;
@@ -58,6 +62,7 @@ const routes: () => Promise<RouteRecordRaw[]> = async () => {
         // but you can also remove it
         routesArray.push(notFoundDynamicRoute);
     }
+    console.log(routesArray);
     return routesArray;
 }
 

@@ -18,10 +18,16 @@ export class ScheduleDay {
     }
 }
 
-export interface OldScheduleDay {
+export class OldScheduleDay {
     from: string;
     to: string;
     active: boolean;
+
+    constructor(from: string, to: string, active: boolean) {
+        this.from = from;
+        this.to = to;
+        this.active = active;
+    }
 }
 
 export class Schedule {
@@ -33,12 +39,12 @@ export class Schedule {
     saturday: ScheduleDay;
     sunday: ScheduleDay;
 
-    resolveDay(day: ScheduleDay | OldScheduleDay | undefined): ScheduleDay  {
+    resolveDay(day: any): ScheduleDay {
         if (day) {
-            if (!(day instanceof ScheduleDay) && day.from !== undefined) {
+            if (day.from !== undefined) {
                 return new ScheduleDay({active: day.active, shifts: [new Shift({from: day.from, to: day.to})]});
             } else {
-                if (!(day instanceof ScheduleDay) || day.shifts) {
+                if (day.shifts) {
                     return day as ScheduleDay;
                 } else {
                     return new ScheduleDay({});

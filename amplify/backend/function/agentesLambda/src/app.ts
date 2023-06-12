@@ -53,8 +53,18 @@ app.get('/agentes', async function (req, res) {
     }
 });
 
-app.get('/agentes/*', function (req, res) {
-    res.json({success: 'get call succeed!', url: req.url});
+//app.get('/agentes/*', function (req, res) {
+//    res.json({success: 'get call succeed!', url: req.url});
+//});
+
+app.get('/agentes/comisionesActivas/:id', async function (req, res) {
+    const results = await req.clienteDB!.query("SELECT * FROM ticketagente WHERE agenteid = $1 and activo = $2", [req.params.id, true]);
+    res.json(results.rows);
+});
+
+app.get('/agentes/comisiones/:id', async function (req, res) {
+    const results = await req.clienteDB!.query("SELECT * FROM ticketagente WHERE agenteid = $1", [req.params.id]);
+    res.json(results.rows);
 });
 
 app.post('/agentes', async function (req, res) {

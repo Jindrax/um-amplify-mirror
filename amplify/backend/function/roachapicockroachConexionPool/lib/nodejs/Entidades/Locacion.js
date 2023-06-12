@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Schedule_1 = require("./Schedule");
 class Locacion {
-    constructor({ id, nombrecompleto, titulo, subtitulosuperior, subtituloinferior, direccion, longitud, latitud, geom, telefono, descripcion, perfilessociales, carpetaimagenes, video, horario, atributos, likes, marcados, ciudad, ciudadstr, unidadadmin, unidadadminstr, creadoen, pagohasta, empresa, identificador, agente }) {
+    constructor({ id, nombrecompleto, titulo, subtitulosuperior, subtituloinferior, direccion, longitud, latitud, geom, telefono, descripcion, perfilessociales, carpetaimagenes, video, horario, atributos, likes, marcados, ciudad, ciudadstr, unidadadmin, unidadadminstr, creadoen, pagohasta, empresa, identificador, agente, categoriamain, categoriasub }) {
         this.id = id ? id : '';
         this.nombrecompleto = nombrecompleto ? nombrecompleto : '';
         this.titulo = titulo ? titulo : '';
@@ -30,6 +30,8 @@ class Locacion {
         this.empresa = empresa ? empresa : '';
         this.identificador = identificador ? identificador : '';
         this.agente = agente ? agente : '';
+        this.categoriamain = categoriamain ? categoriamain : '';
+        this.categoriasub = categoriasub ? categoriasub : '';
     }
 }
 exports.default = Locacion;

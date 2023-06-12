@@ -79,7 +79,7 @@ const drawer = ref(true);
 const session = useSessionStore();
 const {isAdmin, userInfo} = storeToRefs(session);
 const user = session.user;
-const availableLinks = agenteDashboardDynamicRoute.children;
+const availableLinks = session.routes.children;
 
 const pageLocation = computed(() => {
   return router.currentRoute.value.path.split("/").pop()!.replace("_", " ");

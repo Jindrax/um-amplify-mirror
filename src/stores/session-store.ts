@@ -1,8 +1,13 @@
 import {defineStore} from 'pinia';
 import {CognitoUser} from '@aws-amplify/auth';
-import {useRouter} from "vue-router";
+import {RouteRecordRaw, useRouter} from "vue-router";
 import {getPermissionLevel} from "../router/routes";
-import {agenteDashboardDynamicRoute, empresaDashboardDynamicRoute, loginDynamicRoute} from "../router/dynamicRoutes";
+import {
+    adminDashboardDynamicRoute,
+    agenteDashboardDynamicRoute,
+    empresaDashboardDynamicRoute,
+    loginDynamicRoute
+} from "../router/dynamicRoutes";
 
 interface UserInfo {
     nombres: string,
@@ -15,6 +20,7 @@ export const useSessionStore = defineStore('session', {
     state: () => ({
         user: undefined as CognitoUser | undefined,
         userInfo: {} as UserInfo,
+        routes: {} as RouteRecordRaw
     }),
     getters: {
         firstName: (state) => {
@@ -61,13 +67,19 @@ export const useSessionStore = defineStore('session', {
             const permissionLevel = getPermissionLevel(groups);
             switch (permissionLevel) {
                 case "admins":
+                    // @ts-ignore
+                    this.router.addRoute(adminDashboardDynamicRoute);
+                    this.routes = adminDashboardDynamicRoute;
+                    break;
                 case "agentes":
                     // @ts-ignore
                     this.router.addRoute(agenteDashboardDynamicRoute);
+                    this.routes = agenteDashboardDynamicRoute;
                     break;
                 case "empresas":
                     // @ts-ignore
                     this.router.addRoute(empresaDashboardDynamicRoute);
+                    this.routes = empresaDashboardDynamicRoute;
                     break;
                 default:
                     break;
@@ -77,7 +89,6 @@ export const useSessionStore = defineStore('session', {
         },
         logout() {
             // @ts-ignore
-            console.log(this.router.getRoutes());
             this.user = undefined;
             this.userInfo = {
                 nombres: "",

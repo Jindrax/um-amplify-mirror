@@ -11,14 +11,14 @@ export const useUnidadAdminStore = defineStore('unidadAdmin', {
     },
     getters: {
         getUnidadesAdmin: (state): UnidadAdmin[] => {
-            if (state.expiration <= Date.now()) {
+            // if (state.expiration <= Date.now()) {
                 API.get("umapi", "/unidadesadmin", {}).then((unidadAdminQuery) => {
                     state.unidadesAdmin = unidadAdminQuery.map((unidadAdmin: any) => {
                         return new UnidadAdmin(unidadAdmin);
                     });
                     state.expiration = Date.now() + 604800000;
                 });
-            }
+            // }
             return state.unidadesAdmin;
         },
         getUnidadesAdminSorted() {

@@ -52,9 +52,9 @@ const props = defineProps<{
 const uploadState = ref(false);
 
 onMounted(() => {
-  if (props.locacion.video.HLS) {
+  if (props.locacion.video.CMAFHIGH) {
     let video: HTMLMediaElement | null = document.getElementById('video') as HTMLMediaElement;
-    let videoSrc = props.locacion.video.HLS;
+    let videoSrc = props.locacion.video.CMAFHIGH;
     if (Hls.isSupported()) {
       let hls = new Hls();
       hls.loadSource(videoSrc);

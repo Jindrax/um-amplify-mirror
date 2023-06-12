@@ -1,13 +1,14 @@
 import {RouteRecordRaw} from "vue-router";
 
-export const agenteDashboardDynamicRoute: RouteRecordRaw = {
+
+export const adminDashboardDynamicRoute: RouteRecordRaw = {
     name: "dashboard",
     path: '/dashboard',
     component: () => import('layouts/MainLayout.vue'),
     children: [
         {
             path: 'Inicio',
-            component: () => import('pages/Inicio.vue'),
+            component: () => import('pages/Agente/Inicio.vue'),
             meta: {itemLink: "Inicio", to: "/dashboard/Inicio"}
         },
         {
@@ -19,6 +20,7 @@ export const agenteDashboardDynamicRoute: RouteRecordRaw = {
             path: 'Empresas',
             component: () => import('pages/Agente/Empresas/AgenteEmpresas.vue'),
             meta: {itemLink: "Empresas", to: "/dashboard/Empresas"},
+            name: "Empresas",
             children: [
                 {
                     path: '',
@@ -82,22 +84,76 @@ export const agenteDashboardDynamicRoute: RouteRecordRaw = {
     ],
 };
 
+export const agenteDashboardDynamicRoute: RouteRecordRaw = {
+    name: "dashboard",
+    path: '/dashboard',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+        {
+            path: 'Inicio',
+            component: () => import('pages/Agente/Inicio.vue'),
+            meta: {itemLink: "Inicio", to: "/dashboard/Inicio"}
+        },
+        {
+            path: 'Empresas',
+            component: () => import('pages/Agente/Empresas/AgenteEmpresas.vue'),
+            meta: {itemLink: "Empresas", to: "/dashboard/Empresas"},
+            name: "Empresas",
+            children: [
+                {
+                    path: '',
+                    component: () => import('pages/Agente/Empresas/AgenteEmpresasIndice.vue'),
+                    name: 'EmpresaIndice'
+                },
+                {
+                    path: 'Nueva_Empresa',
+                    component: () => import('pages/Agente/Empresas/AgenteEmpresasNueva.vue'),
+                    name: 'EmpresaNueva'
+                },
+                {
+                    path: 'Editar_Empresa',
+                    component: () => import('pages/Agente/Empresas/AgenteEmpresasEditar.vue'),
+                    name: 'EmpresaEditar'
+                },
+            ]
+        },
+        {
+            path: 'Finanzas',
+            component: () => import('pages/Agente/Finanzas/Finanzas.vue'),
+            meta: {itemLink: "Finanzas", to: "/dashboard/Finanzas"}
+        }
+    ],
+};
+
 export const empresaDashboardDynamicRoute: RouteRecordRaw = {
     name: "dashboard",
     path: '/dashboard',
     component: () => import('layouts/EmpresaLayout.vue'),
     children: [
-        {path: 'Inicio', component: () => import('pages/Inicio.vue')},
-        {path: 'Locaciones', component: () => import('pages/Empresa/Locaciones.vue'), name: "Locaciones"},
         {
-            name: "EditarLocacion",
-            path: 'Locaciones/Editar',
-            component: () => import('components/Empresa/EditLocacion.vue')
+            path: 'Inicio',
+            component: () => import('pages/Empresa/Inicio.vue'),
+            meta: {itemLink: "Inicio", to: "/dashboard/Inicio"}
         },
-        {path: 'Mensajeria', component: () => import('pages/Empresa/Mensajeria.vue')},
-        {path: 'Mensajeria/:locacionId', component: () => import('components/Empresa/LocacionChatView.vue')},
-        {path: 'Finanzas', component: () => import('pages/Inicio.vue')},
-        {path: 'Perfil', component: () => import('pages/Empresa/Perfil.vue')}
+        {
+            path: 'Locaciones',
+            component: () => import('pages/Empresa/Locaciones.vue'),
+            name: "Locaciones",
+            meta: {itemLink: "Locaciones", to: "/dashboard/Locaciones"}
+        },
+        //{
+        //    name: "EditarLocacion",
+        //    path: 'Locaciones/Editar',
+        //    component: () => import('components/Empresa/EditLocacion.vue')
+        //},
+        //{path: 'Mensajeria', component: () => import('pages/Empresa/Mensajeria.vue')},
+        //{path: 'Mensajeria/:locacionId', component: () => import('components/Empresa/LocacionChatView.vue')},
+        {
+            path: 'Finanzas',
+            component: () => import('pages/Empresa/Pagos.vue'),
+            meta: {itemLink: "Finanzas", to: "/dashboard/Finanzas"}
+        },
+        //{path: 'Perfil', component: () => import('pages/Empresa/Perfil.vue')}
     ],
 };
 

@@ -7,11 +7,8 @@
     </div>
     <div class="col-auto row">
       <vertical-list :list="empresas" title="Mis empresas" action-url="/sdasf"/>
-      <vertical-list :list="boletines" title="Boletines"/>
-      <vertical-list :list="novedades" title="Novedades"/>
       <calendar-card/>
     </div>
-    <q-btn label="test" @click="test"/>
   </q-page>
 </template>
 

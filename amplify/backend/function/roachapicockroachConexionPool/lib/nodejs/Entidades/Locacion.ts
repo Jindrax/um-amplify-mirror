@@ -29,6 +29,8 @@ export default class Locacion {
     empresa: string;
     identificador: string;
     agente: string;
+    categoriamain: string;
+    categoriasub: string;
 
     constructor({
                     id,
@@ -57,8 +59,10 @@ export default class Locacion {
                     pagohasta,
                     empresa,
                     identificador,
-                    agente
-                }: { id?: string, nombrecompleto?: string, titulo?: string, subtitulosuperior?: string, subtituloinferior?: string, direccion?: string, longitud?: number, latitud?: number, geom?: string, telefono?: string, descripcion?: string, perfilessociales?: any, carpetaimagenes?: any[], video?: any, horario?: any, atributos?: any, likes?: number, marcados?: number, ciudad?: string, ciudadstr?: string, unidadadmin?: string, unidadadminstr?: string, creadoen?: string, empresa?: string, identificador?: string, pagohasta?: string, agente?: string }) {
+                    agente,
+                    categoriamain,
+                    categoriasub
+                }: { id?: string, nombrecompleto?: string, titulo?: string, subtitulosuperior?: string, subtituloinferior?: string, direccion?: string, longitud?: number, latitud?: number, geom?: string, telefono?: string, descripcion?: string, perfilessociales?: any, carpetaimagenes?: any[], video?: any, horario?: any, atributos?: any, likes?: number, marcados?: number, ciudad?: string, ciudadstr?: string, unidadadmin?: string, unidadadminstr?: string, creadoen?: string, empresa?: string, identificador?: string, pagohasta?: string, agente?: string, categoriamain?: string, categoriasub?: string }) {
         this.id = id ? id : '';
         this.nombrecompleto = nombrecompleto ? nombrecompleto : '';
         this.titulo = titulo ? titulo : '';
@@ -86,6 +90,8 @@ export default class Locacion {
         this.empresa = empresa ? empresa : '';
         this.identificador = identificador ? identificador : '';
         this.agente = agente ? agente : '';
+        this.categoriamain = categoriamain ? categoriamain : '';
+        this.categoriasub = categoriasub ? categoriasub : '';
     }
 
 }

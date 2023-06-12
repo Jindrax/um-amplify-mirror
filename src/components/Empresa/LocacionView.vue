@@ -101,7 +101,7 @@
           </div>
         </q-card-section>
         <q-card-actions class="row">
-          <q-btn class="col empresa-advance-btn" label="Propuesta de edición" @click="editLocacion"/>
+          <q-btn class="col empresa-advance-btn" label="Editar" @click="editLocacion"/>
         </q-card-actions>
       </q-card>
     </q-item-section>
@@ -189,7 +189,7 @@ onMounted(() => {
   player.value = videojs(videoPlayer.value, {
     sources: [
       {
-        src: props.locacion.video.HLS,
+        src: props.locacion.video.CMAFHIGH,
         type: 'application/x-mpegURL'
       }
     ],

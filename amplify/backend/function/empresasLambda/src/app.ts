@@ -5,6 +5,9 @@ import {actualizarEntidad, getCliente, insertarEntidad} from "/opt/nodejs/index"
 import {PoolClient} from "pg";
 import Empresa from "/opt/nodejs/Entidades/Empresa";
 import PropuestaEdicionLocacion from "/opt/nodejs/Entidades/PropuestaEdicionLocacion";
+import * as console from "console";
+import Locacion from "/opt/nodejs/Entidades/Locacion";
+import moment from "moment";
 
 
 const {CognitoIdentityServiceProvider} = require('aws-sdk');
@@ -28,6 +31,37 @@ app.use(async function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers");
     req.clienteDB = await getCliente();
     next();
+});
+
+/**********************
+ * Planes *
+ **********************/
+
+app.get('/empresas/br/planes', async function (req, res) {
+    let results;
+    try {
+        results = await req.clienteDB!.query("SELECT * FROM planes");
+        console.log(results);
+    } catch (err) {
+        console.error("error executing query:", err);
+    } finally {
+        req.clienteDB!.release();
+        res.json({success: results.rows, url: req.url});
+    }
+});
+
+app.get('/empresas/br/planPioneros', async function (req, res) {
+    let results;
+    try {
+        results = await req.clienteDB!.query("SELECT count(E.identificacion) FROM empresa E");
+        console.log(results);
+
+    } catch (err) {
+        console.error("error executing query:", err);
+    } finally {
+        req.clienteDB!.release();
+        res.json({success: results, url: req.url});
+    }
 });
 
 
@@ -140,9 +174,74 @@ app.post('/empresas/propuesta', async function (req, res) {
     }
 });
 
-app.post('/empresas/*', function (req, res) {
-    // Add your code here
-    res.json({success: 'post call succeed!', url: req.url, body: req.body})
+app.post('/empresas/cobros', async function (req, res) {
+    const {empresa, cobrototal, mesespago, locaciones} = req.body;
+    const impuestoPorcentual = 0.19;
+    const impuesto = cobrototal - (cobrototal / (1 + impuestoPorcentual));
+    const empresaObject = await req.clienteDB!.query("SELECT * FROM empresa e WHERE e.identificacion = $1", [empresa]);
+    const ordencobro = [
+        empresa,
+        cobrototal,
+        impuesto,
+        empresaObject.rows[0].agente,
+        cobrototal - impuesto,
+        new Date(),
+        mesespago
+    ];
+    const orden = await req.clienteDB!.query("INSERT INTO ordencobro(empresa, cobrototal, impuesto, agente, comisionagente, fechapago, mesespago) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id", ordencobro);
+    console.log(orden);
+    const ordenId = orden.rows[0].id;
+    for (let locacion of locaciones) {
+        await req.clienteDB!.query("INSERT INTO locacionporordencobro(orden, locacion, ejecutado) VALUES ($1, $2, false)", [ordenId, locacion]);
+    }
+    res.json({
+        ordenId
+    });
+});
+
+app.post('/empresas/pagos', async function (req, res) {
+    console.log("Query: ", req.query);
+    const {x_respuesta, x_id_factura, x_id_invoice} = req.query;
+    if (x_respuesta === 'Aceptada') {
+        //x_id_factura: codigo de la orden de cobro
+        const ordenCobroRow = await req.clienteDB!.query("SELECT * FROM ordencobro O WHERE O.id = $1", [x_id_factura]);
+        const ordenCobro = ordenCobroRow.rows[0];
+        const locaciones = await req.clienteDB!.query("SELECT * FROM locacionporordencobro O WHERE O.orden = $1", [x_id_factura]);
+        for (const locacionId of locaciones.rows) {
+            const locacionRow = await req.clienteDB!.query("SELECT * FROM locacion L WHERE L.id = $1", [locacionId]);
+            const locacion: Locacion = locacionRow.rows[0];
+            const pagoHasta = moment(locacion.pagohasta);
+            const ahora = moment();
+            let date = new Date();
+            let lanzamiento = moment("20230616", "YYYYMMDD");
+            if (ahora.isBefore(lanzamiento, "day")) {
+                lanzamiento.add("month", ordenCobro.mesespago);
+                date = lanzamiento.toDate();
+            } else if (pagoHasta.isBefore(ahora, "day")) {
+                //El pago esta vencido
+                ahora.add("month", ordenCobro.mesespago);
+                date = ahora.toDate();
+            } else {
+                pagoHasta.add("month", ordenCobro.mesespago);
+                date = pagoHasta.toDate();
+            }
+            const ticket = await req.clienteDB!.query("INSERT INTO ticketagente(agenteid, fechaemision, comision, activo, emitidopor) VALUES ($1, $2, $3, $4, $5) RETURNING id", [ordenCobro.agente, new Date(), ordenCobro.comisionagente, true, ordenCobro.empresa]);
+            console.log(ticket);
+            await req.clienteDB!.query("UPDATE locacion SET pagohasta = $2 WHERE L.id = $1", [locacionId, date]);
+        }
+    }
+    res.json({
+        success: true
+    });
+});
+
+app.post('/empresas/comision', async function (req, res) {
+    const {agenteid, comision, emitidopor} = req.body;
+    const ticket = await req.clienteDB!.query("INSERT INTO ticketagente(agenteid, fechaemision, comision, activo, emitidopor) VALUES ($1, $2, $3, $4, $5) RETURNING id", [agenteid, new Date(), comision, true, emitidopor]);
+    res.json({
+        success: true,
+        ticket: ticket
+    });
 });
 
 /****************************

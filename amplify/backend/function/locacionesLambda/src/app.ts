@@ -6,6 +6,7 @@ import {actualizarEntidad, getCliente} from "/opt/nodejs/index";
 import Locacion from "/opt/nodejs/Entidades/Locacion";
 import Atributo from "/opt/nodejs/Entidades/Atributo";
 import ActualizarLocacion from "/opt/nodejs/Entidades/ActualizarLocacion";
+import * as console from "console";
 
 declare global {
     namespace Express {
@@ -27,6 +28,24 @@ app.use(async function (req, res, next) {
     next();
 });
 
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+}
+
 app.get('/locaciones', async function (req, res) {
     let results;
     try {
@@ -35,7 +54,7 @@ app.get('/locaciones', async function (req, res) {
         console.error("error executing query:", err);
     } finally {
         req.clienteDB!.release();
-        res.json(results.rows);
+        res.json(shuffle(results.rows));
     }
 });
 
@@ -43,6 +62,18 @@ app.get('/locaciones/agente/:agenteid', async function (req, res) {
     let results;
     try {
         results = await req.clienteDB!.query("SELECT * FROM locacion WHERE agente = $1", [req.params.agenteid]);
+    } catch (err) {
+        console.error("error executing query:", err);
+    } finally {
+        req.clienteDB!.release();
+        res.json(results.rows);
+    }
+});
+
+app.get('/locaciones/empresa/:nit', async function (req, res) {
+    let results;
+    try {
+        results = await req.clienteDB!.query("SELECT * FROM locacion WHERE empresa = $1", [req.params.nit]);
     } catch (err) {
         console.error("error executing query:", err);
     } finally {
@@ -65,34 +96,34 @@ app.get('/locaciones/admin', async function (req, res) {
 
 app.get('/locaciones/query', async function (req, res) {
     let results;
-    console.log(req);
     let params: any = req.query;
     try {
         if (params.unidadadmin) {
-            results = await req.clienteDB!.query("SELECT * FROM locacion WHERE unidadadmin = $1", [params.unidadadmin]);
-            console.log(results);
+            results = await req.clienteDB!.query("SELECT * FROM locacion WHERE unidadadmin = $1 AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0", [params.unidadadmin]);
         }
         if (params.ciudad) {
-            results = await req.clienteDB!.query("SELECT * FROM locacion WHERE ciudad = $1", [params.ciudad]);
-            console.log(results);
+            results = await req.clienteDB!.query("SELECT * FROM locacion WHERE ciudad = $1 AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0", [params.ciudad]);
         }
         if (params.radio) {
-            results = await req.clienteDB!.query("SELECT * FROM locacion l WHERE ST_DistanceSphere(l.geom, ST_MakePoint($2 , $3)) <= $1 * 1000", [params.radio, params.longitud, params.latitud]);
-            console.log(results);
+            if (params.categoria) {
+                console.log("Disparando desde categoria")
+                results = await req.clienteDB!.query("SELECT * FROM locacion l WHERE ST_DistanceSphere(l.geom, ST_MakePoint($2 , $3)) <= $1 * 1000 AND $4 in (l.categoriamain, l.categoriasub) AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0", [params.radio, params.longitud, params.latitud, params.categoria]);
+            } else {
+                console.log("Disparando desde radio")
+                results = await req.clienteDB!.query("SELECT * FROM locacion l WHERE ST_DistanceSphere(l.geom, ST_MakePoint($2 , $3)) <= $1 * 1000 AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0", [params.radio, params.longitud, params.latitud]);
+            }
         }
-        if (params.top) {
-            results = await req.clienteDB!.query("SELECT * FROM locacion l JOIN atributosporlocacion a ON l.id = a.locacionid WHERE a.atributoid = $1 ORDER BY l.likes;", [params.top]);
-            console.log(results);
+        if (params.categoria && params.radio === undefined) {
+            results = await req.clienteDB!.query("SELECT * FROM locacion l WHERE (l.categoriamain = $1 OR l.categoriasub = $1) AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0 ORDER BY l.likes;", [params.categoria]);
         }
         if (params.locacionid) {
             results = await req.clienteDB!.query("SELECT * FROM locacion WHERE id = $1", [params.locacionid]);
-            console.log(results);
         }
     } catch (err) {
         console.error("error executing query:", err);
     } finally {
         req.clienteDB!.release();
-        res.json(results.rows);
+        res.json(shuffle(results.rows));
     }
 });
 
@@ -160,15 +191,19 @@ function insertAtributos(atributos: Atributo[], locacionid: string) {
 
 app.post('/locaciones', async function (req, res) {
     let results;
-    const locacion = new Locacion(req.body);
     try {
-        const insertarQuery = insertarEntidad(locacion, "locacion");
-        results = await req.clienteDB!.query(insertarQuery.query, insertarQuery.parametros);
-        const atributos = JSON.parse(locacion.atributos);
-        if (atributos.length > 0) {
-            const insertarAtributosQuery = insertAtributos(JSON.parse(locacion.atributos), locacion.id);
-            await req.clienteDB!.query(insertarAtributosQuery);
+        // const locacion = new Locacion(req.body);
+        if (req.body.categoriasub === "") {
+            delete req.body.categoriasub;
         }
+        const insertarQuery = insertarEntidad(req.body, "locacion");
+        console.log(insertarQuery);
+        results = await req.clienteDB!.query(insertarQuery.query, insertarQuery.parametros);
+        // const atributos = JSON.parse(locacion.atributos);
+        // if (atributos.length > 0) {
+        //     const insertarAtributosQuery = insertAtributos(JSON.parse(locacion.atributos), locacion.id);
+        //     await req.clienteDB!.query(insertarAtributosQuery);
+        // }
     } catch (err) {
         console.error("error executing query:", err);
     } finally {
@@ -203,11 +238,9 @@ app.post('/locaciones/video', async function (req, res) {
     let results;
     try {
         results = await req.clienteDB!.query("UPDATE locacion SET video = $1 WHERE id = $2", [req.body.video, req.body.id]);
-        console.log(results);
     } catch (err) {
         console.error("error executing query:", err);
     } finally {
-        console.log(req.body);
         req.clienteDB!.release();
         res.json(results);
     }
@@ -217,11 +250,9 @@ app.post('/locaciones/images', async function (req, res) {
     let results;
     try {
         results = await req.clienteDB!.query("UPDATE locacion SET carpetaimagenes = $1 WHERE id = $2 RETURNING *", [req.body.carpetaimagenes, req.body.id]);
-        console.log(results);
     } catch (err) {
         console.error("error executing query:", err);
     } finally {
-        console.log(req.body);
         req.clienteDB!.release();
         res.json(results);
     }
@@ -282,7 +313,6 @@ function materializarLikeQueryGenerator(request: MaterializarLikeRequest[]) {
 }
 
 app.put('/locaciones/like/materializar', async function (req, res) {
-    console.log(req.body);
     let results;
     try {
         results = await req.clienteDB!.query(materializarLikeQueryGenerator(req.body.request));

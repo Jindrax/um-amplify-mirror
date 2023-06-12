@@ -42,7 +42,7 @@
                     <q-card-section class="column q-gutter-y-sm">
                       <q-item-label class="col text-h6 text-black q-my-sm">Categorias y atributos</q-item-label>
                       <div class="col q-pa-sm full-width">
-                        <atributo-selector-editable ref="atributoselector" v-model="atributosLocal"/>
+                        <atributo-selector ref="atributoselector" v-model="atributosLocal" v-model:categoriamain="locacionEditable.categoriamain" v-model:categoriasub="locacionEditable.categoriasub"/>
                       </div>
                     </q-card-section>
                   </q-card>
@@ -161,7 +161,7 @@
       </q-card-section>
       <q-card-actions class="row">
         <q-btn class="col revert-btn" label="Cancelar" :to="{name: 'Locaciones'}"/>
-        <q-btn class="col empresa-advance-btn" label="Realizar propuesta" @click="realizarPropuesta"/>
+        <q-btn class="col empresa-advance-btn" label="Guardar" @click="realizarPropuesta"/>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -176,7 +176,7 @@ import HorarioSelector from "components/HorarioSelector.vue";
 import Empresa from "layer/Entidades/Empresa";
 import PropuestaEdicionLocacion from "layer/Entidades/PropuestaEdicionLocacion";
 import {useEmpresaStore} from "stores/empresa-store";
-import AtributoSelectorEditable from "components/AtributoSelectorEditable.vue";
+import AtributoSelector from "components/AtributoSelector.vue";
 import {uid, useQuasar} from "quasar";
 import {SocialProfiles} from "layer/Entidades/SocialProfile";
 import {Schedule} from "layer/Entidades/Schedule";

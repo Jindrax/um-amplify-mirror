@@ -48,29 +48,9 @@
         </div>
         <div class="col-auto full-width empresa-backgroung">
           <q-list class="links">
-            <q-item active-class="activeLink" clickable to="/dashboard/Inicio">
+            <q-item v-for="link in availableLinks" active-class="activeLink" clickable :to="link.meta.to">
               <q-item-section>
-                <q-item-label>Inicio</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item active-class="activeLink" clickable to="/dashboard/Locaciones">
-              <q-item-section>
-                <q-item-label>Locaciones</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item active-class="activeLink" clickable to="/dashboard/Mensajeria">
-              <q-item-section>
-                <q-item-label>Mensajeria</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item active-class="activeLink" clickable to="/dashboard/Finanzas">
-              <q-item-section>
-                <q-item-label>Finanzas</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item active-class="activeLink" clickable to="/dashboard/Perfil">
-              <q-item-section>
-                <q-item-label>Perfil</q-item-label>
+                <q-item-label>{{ link.meta.itemLink }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -94,6 +74,7 @@ import {useSessionStore} from "stores/session-store";
 import {useAgenteStore} from "stores/agente-store";
 import {useLocacionStore} from "stores/locacion-store";
 import {storeToRefs} from "pinia";
+import {agenteDashboardDynamicRoute, empresaDashboardDynamicRoute} from "../router/dynamicRoutes";
 
 const router = useRouter();
 const drawer = ref(true);
@@ -104,6 +85,8 @@ const user = session.user;
 const pageLocation = computed(() => {
   return router.currentRoute.value.path.split("/").pop()!.replace("_", " ");
 });
+
+const availableLinks = empresaDashboardDynamicRoute.children;
 
 const razonSocial = ref("");
 const nit = ref("");

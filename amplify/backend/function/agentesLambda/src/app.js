@@ -19,6 +19,20 @@ app.use(async function (req, res, next) {
     req.clienteDB = await (0, index_1.getCliente)();
     next();
 });
+app.get('/agentes/info/:id', async function (req, res) {
+    let results;
+    try {
+        results = await req.clienteDB.query("SELECT (id, nombres, apellidos)  FROM agente a WHERE a.id = $1", [req.params.id]);
+        console.log(results);
+    }
+    catch (err) {
+        console.error("error executing query:", err);
+    }
+    finally {
+        req.clienteDB.release();
+        res.json({ success: results, url: req.url });
+    }
+});
 app.get('/agentes', async function (req, res) {
     let results;
     try {
@@ -33,8 +47,16 @@ app.get('/agentes', async function (req, res) {
         res.json({ success: results, url: req.url });
     }
 });
-app.get('/agentes/*', function (req, res) {
-    res.json({ success: 'get call succeed!', url: req.url });
+//app.get('/agentes/*', function (req, res) {
+//    res.json({success: 'get call succeed!', url: req.url});
+//});
+app.get('/agentes/comisionesActivas/:id', async function (req, res) {
+    const results = await req.clienteDB.query("SELECT * FROM ticketagente WHERE agenteid = $1 and activo = $2", [req.params.id, true]);
+    res.json(results.rows);
+});
+app.get('/agentes/comisiones/:id', async function (req, res) {
+    const results = await req.clienteDB.query("SELECT * FROM ticketagente WHERE agenteid = $1", [req.params.id]);
+    res.json(results.rows);
 });
 app.post('/agentes', async function (req, res) {
     let results;

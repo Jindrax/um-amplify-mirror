@@ -33,35 +33,59 @@ export const useEmpresaStore = defineStore('empresa', {
         },
         queryEmpresa(identificacion: string): Promise<Empresa> {
             return new Promise((resolve, reject) => {
-                if (this.empresasIndex[identificacion]) {
-                    console.log("Encontrado en local: ", this.empresasIndex[identificacion]);
-                    resolve(this.empresasIndex[identificacion]);
-                } else {
-                    try {
-                        API.get("umapi", `/empresas/identificacion?identificacion=${identificacion}`, {}).then(response => {
-                            console.log("Respuesta", response);
-                            if (response.success) {
-                                if (response.success.length > 0) {
-                                    const empresa = new Empresa(response.success[0]);
-                                    this.empresas.push(empresa);
-                                    this.empresasIndex[empresa.identificacion] = empresa;
-                                    console.log("Encontrado en servidor: ", this.empresasIndex[identificacion]);
-                                    resolve(empresa);
-                                } else {
-                                    reject({
-                                        error: "Empresa no encontrada"
-                                    });
-                                }
+                try {
+                    API.get("umapi", `/empresas/identificacion?identificacion=${identificacion}`, {}).then(response => {
+                        console.log("Respuesta", response);
+                        if (response.success) {
+                            if (response.success.length > 0) {
+                                const empresa = new Empresa(response.success[0]);
+                                this.empresas.push(empresa);
+                                this.empresasIndex[empresa.identificacion] = empresa;
+                                console.log("Encontrado en servidor: ", this.empresasIndex[identificacion]);
+                                resolve(empresa);
                             } else {
                                 reject({
-                                    error: "Error en el servidor no captado por el middleware"
+                                    error: "Empresa no encontrada"
                                 });
                             }
-                        });
-                    } catch (e) {
-                        reject(e);
-                    }
+                        } else {
+                            reject({
+                                error: "Error en el servidor no captado por el middleware"
+                            });
+                        }
+                    });
+                } catch (e) {
+                    reject(e);
                 }
+                // if (this.empresasIndex[identificacion]) {
+                //     console.log("Encontrado en local: ", this.empresasIndex[identificacion]);
+                //     resolve(this.empresasIndex[identificacion]);
+                // } else {
+                //     try {
+                //         API.get("umapi", `/empresas/identificacion?identificacion=${identificacion}`, {}).then(response => {
+                //             console.log("Respuesta", response);
+                //             if (response.success) {
+                //                 if (response.success.length > 0) {
+                //                     const empresa = new Empresa(response.success[0]);
+                //                     this.empresas.push(empresa);
+                //                     this.empresasIndex[empresa.identificacion] = empresa;
+                //                     console.log("Encontrado en servidor: ", this.empresasIndex[identificacion]);
+                //                     resolve(empresa);
+                //                 } else {
+                //                     reject({
+                //                         error: "Empresa no encontrada"
+                //                     });
+                //                 }
+                //             } else {
+                //                 reject({
+                //                     error: "Error en el servidor no captado por el middleware"
+                //                 });
+                //             }
+                //         });
+                //     } catch (e) {
+                //         reject(e);
+                //     }
+                // }
             });
         }
     },

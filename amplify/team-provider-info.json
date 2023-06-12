@@ -16,14 +16,29 @@
         "roachapi": {},
         "userPoolGroups": {}
       },
+      "storage": {
+        "videoStorage": {}
+      },
       "function": {
+        "roachapicockroachConexionPool": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersionb673f5af-build.zip"
+        },
+        "umLikeHandler": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/umLikeHandler-38507836675830334435-build.zip"
+        },
+        "umBookmarkHandler": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/umBookmarkHandler-31484851796f6d4b4756-build.zip"
+        },
         "locacionesLambda": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
-          "s3Key": "amplify-builds/locacionesLambda-47576655543255775637-build.zip"
+          "s3Key": "amplify-builds/locacionesLambda-686b7a4e4e382f313447-build.zip"
         },
         "agentesLambda": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
-          "s3Key": "amplify-builds/agentesLambda-3547334e624831707534-build.zip"
+          "s3Key": "amplify-builds/agentesLambda-58767962733467716d78-build.zip"
         },
         "AdminQueriese1720730": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
@@ -45,25 +60,13 @@
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
           "s3Key": "amplify-builds/categoriasLambda-46325142666849652f79-build.zip"
         },
-        "roachapicockroachConexionPool": {
-          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
-          "s3Key": "amplify-builds/roachapicockroachConexionPool-LambdaLayerVersion18d0a1ff-build.zip"
-        },
         "empresasLambda": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
-          "s3Key": "amplify-builds/empresasLambda-4271514867424a567642-build.zip"
-        },
-        "umLikeHandler": {
-          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
-          "s3Key": "amplify-builds/umLikeHandler-38507836675830334435-build.zip"
+          "s3Key": "amplify-builds/empresasLambda-7059743877364c42626b-build.zip"
         },
         "umLikeMaterializer": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
           "s3Key": "amplify-builds/umLikeMaterializer-4142484c524544484f6d-build.zip"
-        },
-        "umBookmarkHandler": {
-          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
-          "s3Key": "amplify-builds/umBookmarkHandler-31484851796f6d4b4756-build.zip"
         }
       },
       "hosting": {
@@ -71,6 +74,10 @@
           "appId": "d2ozf2wiq5z7uy",
           "type": "manual"
         }
+      },
+      "api": {
+        "umapi": {},
+        "AdminQueries": {}
       }
     }
   }

@@ -65,7 +65,11 @@
           </div>
         </div>
         <div class="col q-pa-sm full-width">
-          <atributo-selector-editable ref="atributoselector" v-model="atributosLocal"/>
+          <!--          <atributo-selector-editable ref="atributoselector" v-model="atributosLocal"/>-->
+          <atributo-selector v-model="locacion.atributos" v-model:categoriamain="locacion.categoriamain"
+                             v-model:categoriasub="locacion.categoriasub" ref="atributoSelector"
+                             @update:categoriamain="(val)=>{registrarCambio('categoriamain', val)}"
+                             @update:categoriasub="(val)=>{registrarCambio('categoriasub', val)}"/>
         </div>
         <div class="row full-width">
           <div class="col q-pa-sm">
@@ -94,9 +98,11 @@
           <div class="col-6 q-pa-sm">
             <span>Localización</span>
             <q-input v-model.number="locacion.latitud" type="number" class="bg-white" label="Latitud"
-                     @update:model-value="(val)=>{registrarCambio('latitud', val)}" debounce="500"/>
+                     @update:model-value="(val)=>{registrarCambio('latitud', val)}" debounce="500"
+                     :rules="[validarCoordenada]" ref="latitudInput"/>
             <q-input v-model.number="locacion.longitud" type="number" class="bg-white" label="Longitud"
-                     @update:model-value="(val)=>{registrarCambio('longitud', val)}" debounce="500"/>
+                     @update:model-value="(val)=>{registrarCambio('longitud', val)}" debounce="500"
+                     :rules="[validarCoordenada]" ref="longitudInput"/>
           </div>
         </div>
       </div>
@@ -114,7 +120,7 @@ import Locacion from "layer/Entidades/Locacion";
 import HorarioSelector from "components/HorarioSelector.vue";
 import Empresa from "layer/Entidades/Empresa";
 import {useEmpresaStore} from "stores/empresa-store";
-import AtributoSelectorEditable from "components/AtributoSelectorEditable.vue";
+import AtributoSelector from "components/AtributoSelector.vue";
 import ActualizarLocacion from "layer/Entidades/ActualizarLocacion";
 import {useLocacionStore} from "stores/locacion-store";
 import {useQuasar} from "quasar";
@@ -136,6 +142,9 @@ const {notify} = useQuasar();
 const facebookInput = ref();
 const instagramInput = ref();
 const whatsappInput = ref();
+
+const latitudInput = ref();
+const longitudInput = ref();
 
 const whatsappRegEx = /\+57\d{10}$/;
 const facebookRegEx = /https:\/\/ww?e?w?b?\.facebook\.com\/([^\/]+)\/?$/;
@@ -200,9 +209,22 @@ onBeforeUnmount(() => {
   atributosWatcher();
 });
 
+const validarCoordenada = (coordenada: number | string) => {
+  if (coordenada === "") {
+    return "Debe ingresar una coordenada en este campo";
+  }
+  if (coordenada === 0) {
+    return "For favor ingrese una coordenada valida para la locación actual";
+  }
+  return true;
+}
+
 async function actualizarLocacion() {
   try {
     let error = false;
+    console.log("Validacion de longitud: ", longitudInput.value.validate());
+    error = latitudInput.value.validate() === false;
+    error = longitudInput.value.validate() === false;
     const perfiles: SocialProfiles = perfilesSocialesLocal.value as SocialProfiles;
     if (perfiles.facebook && perfiles.facebook != "") {
       if (!facebookInput.value.validate()) {
@@ -223,12 +245,12 @@ async function actualizarLocacion() {
       }
     }
     if (error) {
+      notify("Uno o mas campos se encuentran en un estado invalido, por favor revise la información.");
       return;
     }
     const actualizarLocacionObj = new ActualizarLocacion({
       id: props.locacion.id,
-      cambios: registroCambiosLocacion.value,
-      registroCambios: atributoselector.value.getCambios()
+      cambios: registroCambiosLocacion.value
     });
     await locacionStore.updateLocacion(actualizarLocacionObj);
     notify("Se ha actualizado la locación correctamente");

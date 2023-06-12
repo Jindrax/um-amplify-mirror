@@ -10,7 +10,7 @@ export const useAtributoStore = defineStore('atributo', {
     }),
     getters: {
         getAtributos: (state) => {
-            if (state.expiration <= Date.now()) {
+            // if (state.expiration <= Date.now()) {
                 API.get("umapi", "/atributos", {}).then((atributoQuery) => {
                     console.log(atributoQuery);
                     state.atributos = atributoQuery.map((atributo: any) => {
@@ -18,7 +18,7 @@ export const useAtributoStore = defineStore('atributo', {
                     });
                     state.expiration = Date.now() + 300000;
                 });
-            }
+            // }
             return state.atributos;
         },
         getAtributosOptions(): {label: string, value: Atributo}[] {
