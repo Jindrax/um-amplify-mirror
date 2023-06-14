@@ -26,15 +26,16 @@
       <q-card-section>
         <q-item-label class="text-h6">Locaciones disponibles para pago</q-item-label>
         <br>
-        <q-option-group :options="opcionesLocaciones" v-model="seleccion" type="checkbox"/>
+        <q-option-group :options="opcionesLocaciones" v-model="seleccion" type="checkbox"
+                        @update:model-value="actualizarSeleccion"/>
       </q-card-section>
     </q-card>
-    <q-card class="col-auto full-width">
-      <q-card-section class="col q-gutter-y-sm">
-        <q-input class="col" label="Valor mes (Test)" outlined type="number" v-model.number="valorMes"/>
-        <q-input class="col" label="Meses a pagar" outlined type="number" v-model.number="meses"/>
-      </q-card-section>
-    </q-card>
+    <!--    <q-card class="col-auto full-width">-->
+    <!--      <q-card-section class="col q-gutter-y-sm">-->
+    <!--        <q-input class="col" label="Valor mes (Test)" outlined type="number" v-model.number="valorMes"/>-->
+    <!--        <q-input class="col" label="Meses a pagar" outlined type="number" v-model.number="meses"/>-->
+    <!--      </q-card-section>-->
+    <!--    </q-card>-->
     <q-card class="col-auto full-width">
       <q-card-section>
         <q-markup-table separator="cell">
@@ -49,12 +50,12 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="locacion in locacionesSeleccionadas">
+          <tr v-for="orden in ordenes">
             <td>{{
-                `${locacion.identificador} - hasta: ${moment(locacion.pagohasta).add("month", meses).format("DD/MM/yyyy")}`
+                `${orden.locacion.identificador} - hasta: ${moment(orden.locacion.pagohasta).add("month", orden.meses).format("DD/MM/yyyy")}`
               }}
             </td>
-            <td class="text-right">{{ valorFormateado(sinImpuestos(valorMes * meses)) }}</td>
+            <td class="text-right">{{ valorFormateado(sinImpuestos(orden.valor)) }}</td>
           </tr>
           <tr>
             <td>Subtotal</td>
@@ -71,7 +72,9 @@
           </tbody>
         </q-markup-table>
         <br>
-        <q-item class="full-width q-pa-none" clickable>
+        <q-option-group :options="opcionesPago" v-model="opcionPagoSeleccionada"/>
+        <br>
+        <q-item class="full-width q-pa-none">
           <q-item-section>
             <q-item-label class="text-h6"><b>Total</b></q-item-label>
           </q-item-section>
@@ -98,7 +101,7 @@ import {useQuasar} from "quasar";
 
 const locaciones = ref([]);
 const nit = ref();
-const seleccion = ref([] as string[]);
+const seleccion = ref([] as Locacion[]);
 const meses = ref(1);
 const valorMes = ref(350000);
 const valorImpuesto = ref(0.19);
@@ -120,6 +123,24 @@ interface Orden {
   locacion: Locacion,
   meses: number
 }
+
+const opcionesPago = [
+  {
+    label: "Pago en linea",
+    value: "online"
+  },
+  {
+    label: "Transferencia",
+    value: "transfer"
+  }
+];
+
+const opcionesPagoDict: {[key: string]: string} = {
+  online: "pago en linea",
+  transfer: "transferencia"
+}
+
+const opcionPagoSeleccionada = ref("online");
 
 const planes: Ref<Plan[]> = ref([
   {
@@ -153,7 +174,7 @@ onBeforeMount(async () => {
   //@ts-ignore
   handler = ePayco.checkout.configure({
     key: '791fc4f72faf72b71a2569e6bc1eb26a',
-    test: true
+    test: false
   });
   planes.value = (await API.get("umapi", '/empresas/br/planes', {})).success as unknown as Plan[];
 
@@ -163,7 +184,7 @@ const opcionesLocaciones = computed(() => {
   return locaciones.value.map((locacion: Locacion) => {
     return {
       label: `${locacion.identificador} - Pago hasta: ${moment(locacion.pagohasta).format("DD/MM/yyyy")}`,
-      value: locacion.id
+      value: locacion
     }
   });
 });
@@ -175,7 +196,11 @@ const locacionesSeleccionadas = computed(() => {
 })
 
 const totalCobroNumero = computed(() => {
-  return (valorMes.value * meses.value) * seleccion.value.length;
+  let value = 0;
+  for (let orden of ordenes.value) {
+    value += orden.valor;
+  }
+  return value;
 })
 
 const impuesto = computed(() => {
@@ -199,41 +224,86 @@ function test() {
 }
 
 async function pagar() {
-  q.loading.show();
-  const response = await API.post("umapi", `/empresas/cobros`, {
-    body: {
-      empresa: nit.value,
-      cobrototal: totalCobroNumero.value,
-      mesespago: meses.value,
-      locaciones: seleccion.value
+  if(planSeleccionado.value === ""){
+    q.notify("Primero debe seleccionar un plan sobre el que realizar el pago");
+    return;
+  }
+  if(ordenes.value.length === 0){
+    q.notify("Debe seleccionar al menos una locación sobre la que desea generar el pago");
+    return;
+  }
+  q.dialog({
+    message: `¿Esta seguro de que desea hacer el pago a traves del medio ${opcionesPagoDict[opcionPagoSeleccionada.value]}?`,
+    cancel: true
+  }).onOk(async (payload)=>{
+    q.loading.show();
+    const response = await API.post("umapi", `/empresas/cobros`, {
+      body: {
+        empresa: nit.value,
+        cobrototal: totalCobroNumero.value,
+        mesespago: meses.value,
+        locaciones: seleccion.value.map(locacion => locacion.id),
+        plan: planSeleccionado.value,
+        mediopago: opcionPagoSeleccionada.value
+      }
+    });
+    q.loading.hide();
+    if(opcionPagoSeleccionada.value === "online"){
+      let data = {
+        //Parametros compra (obligatorio)
+        name: "Subscripcion a UnMinuto.co",
+        description: `Pago de la subscripcion a UnMinuto de las locaciones ${locacionesSeleccionadas.value.map((locacion: Locacion) => locacion.identificador).join(",")} por ${meses.value} ${meses.value == 1 ? 'mes' : 'meses'}.`,
+        invoice: `${response.ordenId}`,
+        currency: "cop",
+        amount: `${totalCobroNumero.value}`,
+        tax_base: `${sinImpuestos(totalCobroNumero.value)}`,
+        tax: `${impuesto.value}`,
+        country: "co",
+        lang: "es",
+
+        //Onpage="false" - Standard="true"
+        external: "true",
+
+        //Atributos opcionales
+        extra1: `${response.ordenId}`
+      };
+      handler.open(data);
+    }else{
+      q.notify("Su orden de cobro se ha generado correctamente contactese con su agente para continuar el proceso de pago");
     }
-  });
-  q.loading.hide();
-  let data = {
-    //Parametros compra (obligatorio)
-    name: "Subscripcion a UnMinuto.co",
-    description: `Pago de la subscripcion a UnMinuto de las locaciones ${locacionesSeleccionadas.value.map((locacion: Locacion) => locacion.identificador).join(",")} por ${meses.value} ${meses.value == 1 ? 'mes' : 'meses'}.`,
-    invoice: `${response.ordenId}`,
-    currency: "cop",
-    amount: `${totalCobroNumero.value}`,
-    tax_base: `${sinImpuestos(totalCobroNumero.value)}`,
-    tax: `${impuesto.value}`,
-    country: "co",
-    lang: "es",
-
-    //Onpage="false" - Standard="true"
-    external: "true",
-
-    //Atributos opcionales
-    extra1: `${response.ordenId}`
-  };
-  handler.open(data);
+  }).onCancel(()=>{
+    q.notify("Se ha cancelado la orden de cobro");
+  })
 }
 
 async function seleccionarPlan(plan: Plan) {
   planSeleccionado.value = plan.titulo;
   meses.value = plan.meses;
   valorMes.value = plan.valor;
+  await actualizarSeleccion(seleccion.value);
+}
+
+async function actualizarSeleccion(seleccion: Locacion[]) {
+  ordenes.value = [] as Orden[];
+  if (planSeleccionado.value === "Básico") {
+    for (let locacion of seleccion) {
+      ordenes.value.push({
+        concepto: `${locacion.identificador} - hasta: ${moment(locacion.pagohasta).add("month", meses.value).format("DD/MM/yyyy")}`,
+        locacion: locacion,
+        meses: meses.value,
+        valor: valorMes.value
+      });
+    }
+  } else {
+    for (let locacion of seleccion) {
+      ordenes.value.push({
+        concepto: `${locacion.identificador} - Plan ${planSeleccionado.value} - hasta: ${moment(locacion.pagohasta).add("month", meses.value).format("DD/MM/yyyy")}`,
+        locacion: locacion,
+        meses: meses.value,
+        valor: valorMes.value
+      });
+    }
+  }
 }
 
 </script>

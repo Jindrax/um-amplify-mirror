@@ -81,6 +81,11 @@ export const adminDashboardDynamicRoute: RouteRecordRaw = {
             component: () => import('pages/Agente/Propuestas/AgentePropuesta.vue'),
             meta: {itemLink: "Propuestas", to: "/dashboard/Propuestas"}
         },
+        {
+            path: 'Pagos',
+            component: () => import('pages/Admin/AprobarPagos.vue'),
+            meta: {itemLink: "Pagos", to: "/dashboard/Pagos"}
+        },
     ],
 };
 

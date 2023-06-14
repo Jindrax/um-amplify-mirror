@@ -48,7 +48,7 @@ app.use(async function (req, res, next) {
 app.get('/empresas/br/planes', async function (req, res) {
     let results;
     try {
-        results = await req.clienteDB.query("SELECT * FROM planes");
+        results = await req.clienteDB.query("SELECT * FROM planes ORDER BY orden ASC");
         console.log(results);
     }
     catch (err) {
@@ -185,7 +185,7 @@ app.post('/empresas/propuesta', async function (req, res) {
     }
 });
 app.post('/empresas/cobros', async function (req, res) {
-    const { empresa, cobrototal, mesespago, locaciones } = req.body;
+    const { empresa, cobrototal, mesespago, locaciones, plan, mediopago } = req.body;
     const impuestoPorcentual = 0.19;
     const impuesto = cobrototal - (cobrototal / (1 + impuestoPorcentual));
     const empresaObject = await req.clienteDB.query("SELECT * FROM empresa e WHERE e.identificacion = $1", [empresa]);
@@ -196,9 +196,11 @@ app.post('/empresas/cobros', async function (req, res) {
         empresaObject.rows[0].agente,
         cobrototal - impuesto,
         new Date(),
-        mesespago
+        mesespago,
+        plan,
+        mediopago
     ];
-    const orden = await req.clienteDB.query("INSERT INTO ordencobro(empresa, cobrototal, impuesto, agente, comisionagente, fechapago, mesespago) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id", ordencobro);
+    const orden = await req.clienteDB.query("INSERT INTO ordencobro(empresa, cobrototal, impuesto, agente, comisionagente, fechapago, mesespago, plan, mediopago) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id", ordencobro);
     console.log(orden);
     const ordenId = orden.rows[0].id;
     for (let locacion of locaciones) {
@@ -209,41 +211,60 @@ app.post('/empresas/cobros', async function (req, res) {
     });
 });
 app.post('/empresas/pagos', async function (req, res) {
-    console.log("Query: ", req.query);
-    const { x_respuesta, x_id_factura, x_id_invoice } = req.query;
-    if (x_respuesta === 'Aceptada') {
-        //x_id_factura: codigo de la orden de cobro
-        const ordenCobroRow = await req.clienteDB.query("SELECT * FROM ordencobro O WHERE O.id = $1", [x_id_factura]);
-        const ordenCobro = ordenCobroRow.rows[0];
-        const locaciones = await req.clienteDB.query("SELECT * FROM locacionporordencobro O WHERE O.orden = $1", [x_id_factura]);
-        for (const locacionId of locaciones.rows) {
-            const locacionRow = await req.clienteDB.query("SELECT * FROM locacion L WHERE L.id = $1", [locacionId]);
-            const locacion = locacionRow.rows[0];
-            const pagoHasta = (0, moment_1.default)(locacion.pagohasta);
-            const ahora = (0, moment_1.default)();
-            let date = new Date();
-            let lanzamiento = (0, moment_1.default)("20230616", "YYYYMMDD");
-            if (ahora.isBefore(lanzamiento, "day")) {
-                lanzamiento.add("month", ordenCobro.mesespago);
-                date = lanzamiento.toDate();
+    try {
+        console.log("Inicia la ejecucion del algoritmo");
+        const { x_respuesta, x_id_factura, x_id_invoice } = req.query;
+        if (x_respuesta === 'Aceptada') {
+            //x_id_factura: codigo de la orden de cobro
+            console.log("Es una transaccion aceptada");
+            const ordenCobroRow = await req.clienteDB.query("SELECT * FROM ordencobro O WHERE O.id = $1", [x_id_factura]);
+            const ordenCobro = ordenCobroRow.rows[0];
+            const locaciones = await req.clienteDB.query("SELECT * FROM locacionporordencobro O WHERE O.orden = $1", [x_id_factura]);
+            for (const locacionId of locaciones.rows) {
+                console.log("Esta recorriendo las locaciones de la orden");
+                console.log("LocacionID: " + locacionId.locacion);
+                const locacionRow = await req.clienteDB.query("SELECT * FROM locacion L WHERE L.id = $1", [locacionId.locacion]);
+                console.log("Si esto no aparece aqui se esta reventando");
+                const locacion = locacionRow.rows[0];
+                const pagoHasta = (0, moment_1.default)(locacion.pagohasta);
+                const ahora = (0, moment_1.default)();
+                let date = new Date();
+                let lanzamiento = (0, moment_1.default)("20230707", "YYYYMMDD");
+                if (ahora.isBefore(lanzamiento, "day")) {
+                    lanzamiento.add("month", ordenCobro.mesespago);
+                    date = lanzamiento.toDate();
+                }
+                else if (pagoHasta.isBefore(ahora, "day")) {
+                    //El pago esta vencido
+                    ahora.add("month", ordenCobro.mesespago);
+                    date = ahora.toDate();
+                }
+                else {
+                    pagoHasta.add("month", ordenCobro.mesespago);
+                    date = pagoHasta.toDate();
+                }
+                console.log("Va a crear el ticket del agente");
+                const ticket = await req.clienteDB.query("INSERT INTO ticketagente(agenteid, fechaemision, comision, activo, emitidopor) VALUES ($1, $2, $3, $4, $5) RETURNING id", [ordenCobro.agente, new Date(), ordenCobro.comisionagente, true, ordenCobro.empresa]);
+                console.log(ticket);
+                console.log("Va a actualizar la locacion");
+                await req.clienteDB.query("UPDATE locacion SET pagohasta = $2 WHERE id = $1", [locacionId.locacion, date]);
+                await req.clienteDB.query("UPDATE locacionporordencobro SET ejecutado = true WHERE locacion = $1 AND orden = $2", [locacionId.locacion, x_id_factura]);
             }
-            else if (pagoHasta.isBefore(ahora, "day")) {
-                //El pago esta vencido
-                ahora.add("month", ordenCobro.mesespago);
-                date = ahora.toDate();
-            }
-            else {
-                pagoHasta.add("month", ordenCobro.mesespago);
-                date = pagoHasta.toDate();
-            }
-            const ticket = await req.clienteDB.query("INSERT INTO ticketagente(agenteid, fechaemision, comision, activo, emitidopor) VALUES ($1, $2, $3, $4, $5) RETURNING id", [ordenCobro.agente, new Date(), ordenCobro.comisionagente, true, ordenCobro.empresa]);
-            console.log(ticket);
-            await req.clienteDB.query("UPDATE locacion SET pagohasta = $2 WHERE L.id = $1", [locacionId, date]);
+            console.log("Va a actualizar el plan y la orden de cobro");
+            await req.clienteDB.query("UPDATE planes SET disponibilidad = disponibilidad - $1 WHERE titulo = $2", [locaciones.rowCount, ordenCobro.plan]);
+            await req.clienteDB.query("UPDATE ordencobro SET estado = 'Pagado' WHERE id = $1", [x_id_factura]);
         }
+        res.json({
+            success: true
+        });
     }
-    res.json({
-        success: true
-    });
+    catch (e) {
+        console.log("Capturando el error en pagos");
+        console.log(e);
+        res.json({
+            success: true
+        });
+    }
 });
 app.post('/empresas/comision', async function (req, res) {
     const { agenteid, comision, emitidopor } = req.body;
