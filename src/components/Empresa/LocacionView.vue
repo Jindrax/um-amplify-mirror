@@ -124,6 +124,8 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {useRouter} from "vue-router";
 import {useLocacionStore} from "stores/locacion-store";
 import Atributo from "layer/Entidades/Atributo";
+import {useQuasar} from "quasar";
+import EditarEmpresa from "pages/Empresa/EditarEmpresa.vue";
 
 const props = defineProps<{
   locacion: Locacion,
@@ -141,6 +143,7 @@ const mapRef = ref();
 
 const router = useRouter();
 const locacionStore = useLocacionStore();
+const q = useQuasar();
 
 const atributosOpciones: { label: string, value: Atributo }[] = props.locacion.atributos.map((atributo: Atributo) => {
   return {label: atributo.nombre, value: atributo};
@@ -244,7 +247,16 @@ const pause = () => {
 
 const editLocacion = async() => {
   await locacionStore.editLocacion(props.locacion);
-  await router.push({name: "EditarLocacion"});
+  // await router.push({name: "EmpresaEditar"});
+  await q.dialog({
+    component: EditarEmpresa
+  }).onOk(()=>{
+    console.log("ok");
+  }).onCancel(()=>{
+    console.log("cancel");
+  }).onDismiss(()=>{
+    console.log("dismiss");
+  });
 }
 
 </script>

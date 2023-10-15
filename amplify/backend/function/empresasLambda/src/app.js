@@ -48,7 +48,7 @@ app.use(async function (req, res, next) {
 app.get('/empresas/br/planes', async function (req, res) {
     let results;
     try {
-        results = await req.clienteDB.query("SELECT * FROM planes ORDER BY orden ASC");
+        results = await req.clienteDB.query("SELECT * FROM planes WHERE activo = true ORDER BY orden ASC");
         console.log(results);
     }
     catch (err) {
@@ -209,6 +209,17 @@ app.post('/empresas/cobros', async function (req, res) {
     res.json({
         ordenId
     });
+});
+app.get('/empresas/cobros/transferencias', async function (req, res) {
+    try {
+        const results = await req.clienteDB.query("SELECT O.id, empresa, cobrototal, impuesto, concat_ws(' ', nombres, apellidos) AS agente, comisionagente, fechapago, mesespago, estado, plan, mediopago FROM ordencobro O LEFT JOIN agente A ON o.agente = A.id WHERE O.mediopago = 'transfer'");
+        console.log(results);
+        return res.json(results.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.json([]);
+    }
 });
 app.post('/empresas/pagos', async function (req, res) {
     try {

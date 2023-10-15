@@ -30,14 +30,6 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "agentesLambda"
-        },
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
           "resourceName": "ciudadesLambda"
         },
         {
@@ -86,6 +78,14 @@
             "Arn"
           ],
           "category": "function",
+          "resourceName": "umBookmarkHandler"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
           "resourceName": "umLikeHandler"
         },
         {
@@ -94,7 +94,51 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "umBookmarkHandler"
+          "resourceName": "umLocationBasedQuery"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "umNationalQuery"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "agentesLambda"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "roachapi"
+        },
+        {
+          "attributes": [
+            "adminsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "agentesGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "empresasGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -258,6 +302,34 @@
       "service": "Lambda"
     },
     "umLikeMaterializer": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "umLocationBasedQuery": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "roachapicockroachConexionPool"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "umNationalQuery": {
       "build": true,
       "dependsOn": [
         {
@@ -467,6 +539,38 @@
         {
           "category": "function",
           "resourceName": "umLikeMaterializer"
+        }
+      ]
+    },
+    "AMPLIFY_function_umLocationBasedQuery_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umLocationBasedQuery"
+        }
+      ]
+    },
+    "AMPLIFY_function_umLocationBasedQuery_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umLocationBasedQuery"
+        }
+      ]
+    },
+    "AMPLIFY_function_umNationalQuery_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umNationalQuery"
+        }
+      ]
+    },
+    "AMPLIFY_function_umNationalQuery_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "umNationalQuery"
         }
       ]
     },

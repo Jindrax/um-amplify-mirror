@@ -1,9 +1,58 @@
 <template>
   <q-page class="column items-start justify-start q-ml-md column q-gutter-y-sm q-mr-md">
-    <q-card class="full-width">
+    <q-card class="full-width q-mt-md">
       <q-card-section class="row q-gutter-sm justify-start">
-        <q-markup-table>
-
+        <q-markup-table separator="cell">
+          <thead>
+          <tr class="empresa-backgroung">
+            <th class="text-center">
+              <span class="text-body1">Nit</span>
+            </th>
+            <th class="text-center">
+              <span class="text-body1">Agente</span>
+            </th>
+            <th class="text-center">
+              <span class="text-body1">Fecha Orden</span>
+            </th>
+            <th class="text-center">
+                <span class="text-body1">Cobro total</span>
+            </th>
+            <th class="text-center">
+              <span class="text-body1">Meses</span>
+            </th>
+            <th class="text-center">
+              <span class="text-body1">Plan</span>
+            </th>
+            <th class="text-center">
+              <span class="text-body1">Aprobar</span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="orden in ordenes">
+            <td>
+              {{orden.empresa}}
+            </td>
+            <td>
+              {{orden.agente}}
+            </td>
+            <td>
+              {{orden.fechapago}}
+            </td>
+            <td>
+              {{orden.cobrototal}}
+            </td>
+            <td>
+              {{orden.mesespago}}
+            </td>
+            <td>
+              {{ orden.plan}}
+            </td>
+            <td class="text-right">
+              <q-btn label="Aprobar" class="bg-green text-white"/>
+            </td>
+          </tr>
+          </tbody>
         </q-markup-table>
       </q-card-section>
     </q-card>
@@ -51,7 +100,7 @@ const presentarValor = (valor: number) => {
 
 onBeforeMount(async () => {
   const user = await Auth.currentAuthenticatedUser();
-  ordenes.value = (await API.get("umapi", '/empresas/cobros/transferencias', {})).success as unknown as OrdenCobro[];
+  ordenes.value = (await API.get("umapi", '/empresas/cobros/transferencias', {})) as unknown as OrdenCobro[];
 });
 
 async function pagar(factura: number) {

@@ -1,13 +1,6 @@
 {
   "version": 1,
   "paths": {
-    "/agentes": {
-      "name": "/agentes",
-      "lambdaFunction": "agentesLambda",
-      "permissions": {
-        "setting": "open"
-      }
-    },
     "/ciudades": {
       "name": "/ciudades",
       "lambdaFunction": "ciudadesLambda",
@@ -50,18 +43,61 @@
         "setting": "open"
       }
     },
-    "/like": {
-      "name": "/like",
-      "lambdaFunction": "umLikeHandler",
-      "permissions": {
-        "setting": "open"
-      }
-    },
     "/marcado": {
       "name": "/marcado",
       "lambdaFunction": "umBookmarkHandler",
       "permissions": {
         "setting": "open"
+      }
+    },
+    "/like": {
+      "name": "/like",
+      "lambdaFunction": "umLikeHandler",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ]
+      }
+    },
+    "/query": {
+      "name": "/query",
+      "lambdaFunction": "umLocationBasedQuery",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/national": {
+      "name": "/national",
+      "lambdaFunction": "umNationalQuery",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/agentes": {
+      "name": "/agentes",
+      "lambdaFunction": "agentesLambda",
+      "permissions": {
+        "groups": {
+          "admins": [
+            "create",
+            "read",
+            "update"
+          ],
+          "agentes": [
+            "create",
+            "read",
+            "update"
+          ],
+          "empresas": [
+            "create",
+            "read",
+            "update"
+          ]
+        },
+        "setting": "private"
       }
     }
   }

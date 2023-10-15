@@ -157,7 +157,7 @@ export const empresaDashboardDynamicRoute: RouteRecordRaw = {
             path: 'Finanzas',
             component: () => import('pages/Empresa/Pagos.vue'),
             meta: {itemLink: "Finanzas", to: "/dashboard/Finanzas"}
-        },
+        }
         //{path: 'Perfil', component: () => import('pages/Empresa/Perfil.vue')}
     ],
 };

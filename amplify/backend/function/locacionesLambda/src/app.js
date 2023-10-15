@@ -28,6 +28,7 @@ const middleware_1 = __importDefault(require("aws-serverless-express/middleware"
 const index_1 = require("/opt/nodejs/index");
 const ActualizarLocacion_1 = __importDefault(require("/opt/nodejs/Entidades/ActualizarLocacion"));
 const console = __importStar(require("console"));
+const latlon_geohash_1 = __importDefault(require("latlon-geohash"));
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 app.use(middleware_1.default.eventContext());
@@ -104,6 +105,47 @@ app.get('/locaciones/admin', async function (req, res) {
         res.json(results.rows);
     }
 });
+app.get('/locaciones/np-query', async function (req, res) {
+    let results;
+    let params = req.query;
+    const pageSize = params.pageSize ? Number(params.pageSize) : 30;
+    const offset = params.page ? Number(params.page) * pageSize : 0;
+    let queryLimit = ` LIMIT ${pageSize} OFFSET ${offset}`;
+    if (params.geohash) {
+        const latlon = latlon_geohash_1.default.decode(params.geohash);
+        params.latitud = latlon.lat;
+        params.longitud = latlon.lon;
+    }
+    try {
+        if (params.unidadadmin) {
+            results = await req.clienteDB.query("SELECT * FROM locacion WHERE unidadadmin = $1 AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0" + queryLimit, [params.unidadadmin]);
+        }
+        if (params.ciudad) {
+            results = await req.clienteDB.query("SELECT * FROM locacion WHERE ciudad = $1 AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0" + queryLimit, [params.ciudad]);
+        }
+        if (params.radio) {
+            if (params.categoria) {
+                results = await req.clienteDB.query("SELECT * FROM locacion l WHERE ST_DistanceSphere(l.geom, ST_MakePoint($2 , $3)) <= $1 * 1000 AND $4 in (l.categoriamain, l.categoriasub) AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0" + queryLimit, [params.radio, params.longitud, params.latitud, params.categoria]);
+            }
+            else {
+                results = await req.clienteDB.query("SELECT * FROM locacion l WHERE ST_DistanceSphere(l.geom, ST_MakePoint($2 , $3)) <= $1 * 1000 AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0" + queryLimit, [params.radio, params.longitud, params.latitud]);
+            }
+        }
+        if (params.categoria && params.radio === undefined) {
+            results = await req.clienteDB.query("SELECT * FROM locacion l WHERE (l.categoriamain = $1 OR l.categoriasub = $1) AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0 ORDER BY l.likes;" + queryLimit, [params.categoria]);
+        }
+        if (params.locacionid) {
+            results = await req.clienteDB.query("SELECT * FROM locacion WHERE id = $1" + queryLimit, [params.locacionid]);
+        }
+    }
+    catch (err) {
+        console.error("error executing query:", err);
+    }
+    finally {
+        req.clienteDB.release();
+        res.json(shuffle(results.rows));
+    }
+});
 app.get('/locaciones/query', async function (req, res) {
     let results;
     let params = req.query;
@@ -116,11 +158,9 @@ app.get('/locaciones/query', async function (req, res) {
         }
         if (params.radio) {
             if (params.categoria) {
-                console.log("Disparando desde categoria");
                 results = await req.clienteDB.query("SELECT * FROM locacion l WHERE ST_DistanceSphere(l.geom, ST_MakePoint($2 , $3)) <= $1 * 1000 AND $4 in (l.categoriamain, l.categoriasub) AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0", [params.radio, params.longitud, params.latitud, params.categoria]);
             }
             else {
-                console.log("Disparando desde radio");
                 results = await req.clienteDB.query("SELECT * FROM locacion l WHERE ST_DistanceSphere(l.geom, ST_MakePoint($2 , $3)) <= $1 * 1000 AND video <> '{}' AND carpetaimagenes <> '[]' AND longitud <> 0 AND latitud <> 0", [params.radio, params.longitud, params.latitud]);
             }
         }

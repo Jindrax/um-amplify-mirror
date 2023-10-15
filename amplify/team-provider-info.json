@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-roachapi-devum-144757-unauthRole",
       "StackName": "amplify-roachapi-devum-144757",
       "StackId": "arn:aws:cloudformation:us-east-1:576723172939:stack/amplify-roachapi-devum-144757/230c2360-3466-11ed-9a51-0ecd571039cf",
-      "AmplifyAppId": "d2ozf2wiq5z7uy"
+      "AmplifyAppId": "d2ozf2wiq5z7uy",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-roachapi-devum-144757-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
@@ -34,7 +35,7 @@
         },
         "locacionesLambda": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
-          "s3Key": "amplify-builds/locacionesLambda-686b7a4e4e382f313447-build.zip"
+          "s3Key": "amplify-builds/locacionesLambda-522f7049765053664a37-build.zip"
         },
         "agentesLambda": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
@@ -62,11 +63,19 @@
         },
         "empresasLambda": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
-          "s3Key": "amplify-builds/empresasLambda-796979374d79666d7a34-build.zip"
+          "s3Key": "amplify-builds/empresasLambda-36346345597769313172-build.zip"
         },
         "umLikeMaterializer": {
           "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
           "s3Key": "amplify-builds/umLikeMaterializer-4142484c524544484f6d-build.zip"
+        },
+        "umLocationBasedQuery": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/umLocationBasedQuery-71395552736755774d48-build.zip"
+        },
+        "umNationalQuery": {
+          "deploymentBucketName": "amplify-roachapi-devum-144757-deployment",
+          "s3Key": "amplify-builds/umNationalQuery-73693664705459417461-build.zip"
         }
       },
       "hosting": {

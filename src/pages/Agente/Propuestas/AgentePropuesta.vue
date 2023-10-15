@@ -18,7 +18,9 @@ const sessionStore = useSessionStore()
 const pendingPropuestas = ref([] as PropuestaEdicionLocacion[]);
 
 onMounted(async ()=>{
-  pendingPropuestas.value = (await API.get("umapi", `/empresas/propuestas?agenteid=9f5d8539-ed6a-428b-9a96-9474f65c511f`, {}) as {success: any[]}).success.map((attr)=>{
+  pendingPropuestas.value = (await API.get("umapi", `/empresas/propuestas?agenteid=9f5d8539-ed6a-428b-9a96-9474f65c511f`, {
+    headers: { "x-api-key": "BuSFuC3EO21puWqHhskc09hRwxbKNl163pLWDlkM" }
+  }) as {success: any[]}).success.map((attr)=>{
     return new PropuestaEdicionLocacion(attr);
   });
   // pendingPropuestas.value = (await API.get("umapi", `/empresas/propuesta/${sessionStore.userInfo.sub}`, {}) as any[]).map((attr)=>{

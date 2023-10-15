@@ -146,7 +146,7 @@ const planes: Ref<Plan[]> = ref([
   {
     titulo: "Básico",
     descripcion: "Texto de prueba",
-    valor: 300000,
+    valor: 500000,
     meses: 1,
     disponibilidad: 10000000
   },
